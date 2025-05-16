@@ -1,0 +1,662 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThèseManager - Rapports Intermédiaires</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --menu-bg: #5b7a9d;
+  --menu-hover: #7590ad;
+  --menu-active: #496785;
+  --menu-text: #ffffff;
+  --form-bg: #ffffff;
+  --primary: #8ab6ff;
+  --secondary: #c4e0ff;
+  --accent1: #ffd6e0;
+  --accent2: #c5f8c7;
+  --accent3: #fff4bd;
+  --accent4: #e0c2ff;
+  --text: #4a5568;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Nunito', sans-serif;
+}
+
+body {
+  background-color: #f0f5ff;
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.layout {
+  display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 260px;
+  background: var(--menu-bg);
+  box-shadow: var(--shadow-lg);
+  z-index: 999;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+}
+
+.sidebar .logo {
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.sidebar nav {
+  padding: 0 15px;
+}
+
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  text-decoration: none;
+  color: var(--menu-text);
+  border-radius: var(--radius-md);
+  padding: 0 15px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.sidebar nav a:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.5s ease;
+}
+
+.sidebar nav a:hover:before {
+  left: 100%;
+}
+
+.sidebar nav a:hover {
+  background: var(--menu-hover);
+  transform: translateX(5px);
+}
+
+.sidebar nav a.active {
+  background: var(--menu-active);
+}
+
+.sidebar nav a i {
+  min-width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+/* Main Content */
+.main-content {
+  margin-left: 260px;
+  padding: 30px;
+  min-height: 100vh;
+  position: relative;
+  transition: all 0.3s ease;
+  width: calc(100% - 260px);
+}
+
+/* Message d'alerte */
+.alert {
+  padding: 15px;
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+  background: rgba(197, 248, 199, 0.5);
+  border-left: 4px solid #48bb78;
+  display: flex;
+  align-items: center;
+}
+
+.alert-success {
+  background: rgba(197, 248, 199, 0.5);
+  border-left: 4px solid #48bb78;
+}
+
+/* Titre et badge */
+.titre {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  color: var(--text);
+}
+
+.badge {
+  background-color: var(--accent1);
+  border-radius: 20px;
+  padding: 5px 15px;
+  font-size: 16px;
+  margin-left: 15px;
+  color: #c53030;
+  font-weight: 600;
+}
+
+/* Search Bar */
+.search-bar {
+  display: flex;
+  margin-bottom: 25px;
+  max-width: 500px;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 12px 15px;
+  border: 2px solid #e2e8f0;
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background-color: #f8fafc;
+}
+
+.search-bar input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(138, 182, 255, 0.3);
+}
+
+.search-bar button {
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.search-bar button:hover {
+  background: linear-gradient(45deg, var(--menu-hover), var(--primary));
+}
+
+/* Table */
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 30px;
+}
+
+.styled-table thead {
+  background-color: var(--secondary);
+}
+
+.styled-table th {
+  padding: 15px;
+  text-align: left;
+  color: var(--text);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.styled-table td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.styled-table tr:last-child td {
+  border-bottom: none;
+}
+
+.styled-table tr:hover {
+  background-color: #f8fafc;
+}
+
+/* Button Styles */
+.btn-download, .btn-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  margin-right: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  border: none;
+}
+
+.btn-download {
+  background-color: var(--secondary);
+  color: var(--text);
+}
+
+.btn-action {
+  background-color: var(--primary);
+  color: white;
+}
+
+.btn-download:hover, .btn-action:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.text-warning {
+  color: #ed8936;
+  font-weight: 600;
+}
+
+/* Form Styles */
+.assign-form {
+  display: flex;
+  gap: 10px;
+}
+
+.assign-form select {
+  flex: 1;
+  padding: 8px 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  background-color: #f8fafc;
+}
+
+.assign-form select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.assign-button {
+  background-color: var(--accent2);
+  color: #2f855a;
+  border: none;
+  padding: 8px 15px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.assign-button:hover {
+  background-color: #9ae6b4;
+  transform: translateY(-2px);
+}
+
+.assign-button.assigned {
+  background-color: #d1d5db;
+  color: #4b5563;
+  cursor: not-allowed;
+}
+
+/* Popup Styles */
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.overlay.show {
+  display: block;
+}
+
+.popup {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 25px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  z-index: 1001;
+  min-width: 300px;
+  max-width: 450px;
+  animation: zoomIn 0.3s;
+}
+
+.popup.show {
+  display: block;
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.popup .close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--text);
+  transition: all 0.2s ease;
+}
+
+.popup .close:hover {
+  color: var(--primary);
+  transform: scale(1.2);
+}
+
+/* Wave decorations */
+.wave-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  z-index: -1;
+}
+
+.wave-top svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 120px;
+}
+
+.wave-top .shape-fill {
+  fill: var(--secondary);
+}
+
+.wave-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  z-index: -1;
+}
+
+.wave-bottom svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 120px;
+  transform: rotateY(180deg);
+}
+
+.wave-bottom .shape-fill {
+  fill: var(--accent1);
+  opacity: 0.5;
+}
+</style>
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar Menu -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i> ThèseManager
+            </div>
+            <nav>
+                <a href="#"><i class="fas fa-home"></i> Accueil</a>
+                <a href="{% url 'tableau_theses_comite' %}"><i class="fas fa-copy"></i> Copie 0</a>
+                <a href="#" class="active"><i class="fas fa-file-alt"></i> Rapport intermédiaire</a>
+                <a href="#"><i class="fas fa-star"></i> Évaluation</a>
+                <a href="#"><i class="fas fa-users"></i> Composition jury</a>
+                <a href="#"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Decorative Wave Top -->
+            <div class="wave-top">
+                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+                </svg>
+            </div>
+
+            <!-- Messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success">
+                        <i class="fas fa-check-circle"></i> {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Page Title -->
+            <h2 class="titre">
+                <i class="fas fa-file-alt"></i> Rapports Intermédiaires
+                <span class="badge"><i class="fas fa-clock"></i> {{ nb_en_attente }} en attente</span>
+            </h2>
+
+            <!-- Search Bar -->
+            <form method="GET" class="search-bar">
+                <input type="text" name="q" placeholder="Rechercher par titre de thèse..." value="{{ request.GET.q }}">
+                <button type="submit"><i class="fas fa-search"></i> Rechercher</button>
+            </form>
+
+            <!-- Table -->
+            <div class="table-responsive">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th><i class="fas fa-user"></i> Utilisateur</th>
+                            <th><i class="fas fa-heading"></i> Titre</th>
+                            <th><i class="fas fa-file-pdf"></i> Document</th>
+                            <th><i class="fas fa-user-tie"></i> Rapporteur</th>
+                            <th><i class="fas fa-tasks"></i> Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for these in theses %}
+                        <tr>
+                            <td>{{ these.utilisateur.id }} - {{ these.utilisateur.get_full_name }}</td>
+                            <td>{{ these.titre }}</td>
+                            <td>
+                               {% if these.rapport_intermediaire %}
+    <a href="{{ these.rapport_intermediaire.url }}" class="btn-download" target="_blank">
+        <i class="fas fa-download"></i> Télécharger
+    </a>
+    <button onclick="verifierPlagiat({{ these.id }})" class="btn-action">
+        <i class="fas fa-search"></i> Vérifier
+    </button>
+{% else %}
+    <span class="text-warning">
+        <i class="fas fa-exclamation-triangle"></i> Pas de rapport
+    </span>
+{% endif %}
+
+                            </td>
+                            <td>
+                                <form method="POST" action="{% url 'assigner_rapporteur' these.id %}" class="assign-form">
+                                    {% csrf_token %}
+                                    <select name="rapporteur_id" required>
+                                        <option value="">Choisir un professeur</option>
+                                        {% for prof in professeurs %}
+                                        <option value="{{ prof.id }}">{{ prof.nom }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="assign-button">
+                                        <i class="fas fa-user-check"></i> Assigner
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Decorative Wave Bottom -->
+            <div class="wave-bottom">
+                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+                </svg>
+            </div>
+        </main>
+    </div>
+
+    <!-- Popups -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- Popup de vérification de plagiat -->
+    <div id="popup-plagiat" class="popup">
+        <span onclick="fermerPopupPlagiat()" class="close">&times;</span>
+        <h3><i class="fas fa-search"></i> Vérification de plagiat</h3>
+        <p id="contenu-plagiat"></p>
+    </div>
+    
+    <!-- Popup d'assignation -->
+    <div id="assign-popup" class="popup">
+        <span class="close" onclick="closePopup()">×</span>
+        <h3><i class="fas fa-user-check"></i> Assignation de rapporteur</h3>
+        <p id="assign-message"></p>
+    </div>
+
+    <script>
+        // Fonction pour vérifier le plagiat
+        function verifierPlagiat(theseId) {
+            fetch(`/etudiants/verifier_plagiat/${theseId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    const contenu = document.getElementById("contenu-plagiat");
+                    if (data.plagiat) {
+                        contenu.innerHTML = `<div style="color: #e74c3c; padding: 15px; background-color: rgba(231, 76, 60, 0.1); border-radius: 8px;"><i class="fas fa-times-circle"></i> Plagiat détecté ! Cette thèse ressemble à : <strong>${data.titre}</strong></div>`;
+                    } else {
+                        contenu.innerHTML = `<div style="color: #2ecc71; padding: 15px; background-color: rgba(46, 204, 113, 0.1); border-radius: 8px;"><i class="fas fa-check-circle"></i> Aucune similarité détectée !</div>`;
+                    }
+                    
+                    document.getElementById("popup-plagiat").classList.add("show");
+                    document.getElementById("overlay").classList.add("show");
+                })
+                .catch(error => {
+                    document.getElementById("contenu-plagiat").innerHTML = `<div style="color: #e74c3c; padding: 15px; background-color: rgba(231, 76, 60, 0.1); border-radius: 8px;"><i class="fas fa-exclamation-circle"></i> Erreur lors de la vérification.</div>`;
+                    document.getElementById("popup-plagiat").classList.add("show");
+                    document.getElementById("overlay").classList.add("show");
+                });
+        }
+        
+        // Fermer popup plagiat
+        function fermerPopupPlagiat() {
+            document.getElementById("popup-plagiat").classList.remove("show");
+            document.getElementById("overlay").classList.remove("show");
+        }
+        
+        // Afficher popup d'assignation
+        function showAssignPopup(message, isSuccess = true) {
+            const popup = document.getElementById('assign-popup');
+            const overlay = document.getElementById('overlay');
+            const messageBox = document.getElementById('assign-message');
+            
+            if (isSuccess) {
+                messageBox.innerHTML = `<div style="color: #2ecc71; padding: 15px; background-color: rgba(46, 204, 113, 0.1); border-radius: 8px;"><i class="fas fa-check-circle"></i> ${message}</div>`;
+            } else {
+                messageBox.innerHTML = `<div style="color: #e74c3c; padding: 15px; background-color: rgba(231, 76, 60, 0.1); border-radius: 8px;"><i class="fas fa-times-circle"></i> ${message}</div>`;
+            }
+            
+            popup.classList.add('show');
+            overlay.classList.add('show');
+            
+            // Auto-fermeture après 3 secondes
+            setTimeout(() => {
+                popup.classList.remove('show');
+                overlay.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Fermer popup d'assignation
+        function closePopup() {
+            document.getElementById('assign-popup').classList.remove('show');
+            document.getElementById('overlay').classList.remove('show');
+        }
+        
+        // Gestion des formulaires d'assignation
+        document.querySelectorAll('.assign-form').forEach(form => {
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                
+                const url = this.action;
+                const formData = new FormData(this);
+                
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                        },
+                        body: formData
+                    });
+                    
+                    if (response.ok) {
+                        showAssignPopup("Rapporteur assigné avec succès !", true);
+                        
+                        const btn = this.querySelector('.assign-button');
+                        if (btn) {
+                            btn.classList.add('assigned');
+                            btn.innerHTML = '<i class="fas fa-check"></i> Assigné';
+                            btn.disabled = true;
+                        }
+                    } else {
+                        showAssignPopup("Erreur lors de l'assignation.", false);
+                    }
+                } catch (error) {
+                    showAssignPopup("Erreur de connexion.", false);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

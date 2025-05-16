@@ -1,0 +1,667 @@
+{% load static %}
+{% load custom_tags %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Composition du Jury</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+      :root {
+  --menu-bg: #5b7a9d;
+  --menu-hover: #7590ad;
+  --menu-active: #496785;
+  --menu-text: #ffffff;
+  --form-bg: #ffffff;
+  --primary: #8ab6ff;
+  --secondary: #c4e0ff;
+  --accent1: #ffd6e0;
+  --accent2: #c5f8c7;
+  --accent3: #fff4bd;
+  --accent4: #e0c2ff;
+  --text: #4a5568;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Nunito', sans-serif;
+}
+
+body {
+  background-color: #f0f5ff;
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.layout {
+  display: flex;
+}
+
+/* ===== MENU VERTICAL ===== */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 260px;
+  background: var(--menu-bg);
+  box-shadow: var(--shadow-lg);
+  z-index: 999;
+  transition: all 0.3s ease;
+}
+
+.sidebar .logo-container {
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.logo-container img {
+  width: J60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid white;
+  box-shadow: var(--shadow-md);
+}
+
+.logo-container .logo-text {
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
+  margin-left: 12px;
+  letter-spacing: 0.5px;
+}
+
+.sidebar .menu {
+  margin-top: 20px;
+  padding: 0 15px;
+  list-style: none;
+}
+
+.sidebar .menu-item {
+  list-style: none;
+  margin-bottom: 12px;
+}
+
+.sidebar .menu-link {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  text-decoration: none;
+  color: var(--menu-text);
+  border-radius: var(--radius-md);
+  padding: 0 15px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar .menu-link:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.5s ease;
+}
+
+.sidebar .menu-link:hover:before {
+  left: 100%;
+}
+
+.sidebar .menu-link:hover {
+  background: var(--menu-hover);
+  transform: translateX(5px);
+}
+
+.sidebar .menu-link.active {
+  background: var(--menu-active);
+}
+
+.sidebar .menu-icon {
+  min-width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.sidebar .menu-title {
+  margin-left: 10px;
+  white-space: nowrap;
+}
+
+/* ===== CONTAINER PRINCIPAL ===== */
+.container {
+  margin-left: 260px;
+  padding: 30px;
+  min-height: 100vh;
+  position: relative;
+  transition: all 0.3s ease;
+  width: calc(100% - 260px);
+}
+
+h1 {
+  font-size: 32px;
+  margin: 20px 0;
+  color: var(--text);
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+/* Vagues décoratives */
+.wave-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  z-index: -1;
+}
+
+.wave-top svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 120px;
+}
+
+.wave-top .shape-fill {
+  fill: var(--secondary);
+}
+
+.wave-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  z-index: -1;
+}
+
+.wave-bottom svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 120px;
+  transform: rotateY(180deg);
+}
+
+.wave-bottom .shape-fill {
+  fill: var(--accent1);
+  opacity: 0.5;
+}
+
+/* ===== CARD ET FORMULAIRES ===== */
+.card {
+  background: var(--form-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  margin: 50px 0;
+  position: relative;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+.card-header {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  padding: 25px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.card-header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.card-header h2 i {
+  margin-right: 12px;
+  font-size: 32px;
+}
+
+.card-header .badge {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 20px;
+  padding: 5px 10px;
+  font-size: 16px;
+  margin-left: 10px;
+}
+
+.card-header:after {
+  content: "";
+  position: absolute;
+  bottom: -30px;
+  right: -30px;
+  width: 150px;
+  height: 150px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.card-header:before {
+  content: "";
+  position: absolute;
+  top: -30px;
+  left: -30px;
+  width: 100px;
+  height: 100px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.card-body {
+  padding: 35px;
+}
+
+/* Formulaire */
+.search-form {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  max-width: 600px;
+}
+
+.search-form .form-control {
+  flex: 1;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  position: relative;
+  flex: 1;
+  margin-bottom: 25px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--text);
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.form-group label i {
+  margin-right: 6px;
+  color: var(--primary);
+}
+
+.form-control {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #e2e8f0;
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background-color: #f8fafc;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(138, 182, 255, 0.3);
+  transform: translateY(-3px);
+}
+
+.form-control[readonly] {
+  background-color: #f1f5f9;
+  cursor: not-allowed;
+}
+
+textarea.form-control {
+  min-height: 110px;
+  resize: vertical;
+}
+
+/* Boutons */
+.btn {
+  display: inline-block;
+  background: linear-gradient(45deg, var(--primary), var(--secondary));
+  color: white;
+  border: none;
+  padding: 15px 30px;
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-decoration: none;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transform: translateX(-100%);
+}
+
+.btn:hover:before {
+  animation: shine 1.5s;
+}
+
+@keyframes shine {
+  100% { transform: translateX(100%); }
+}
+
+.btn i {
+  margin-right: 8px;
+}
+
+.btn-success {
+  background: linear-gradient(45deg, #48bb78, #68d391);
+}
+
+.btn-secondary {
+  background: linear-gradient(45deg, #718096, #a0aec0);
+}
+
+/* Navigation */
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  margin-bottom: 50px;
+}
+
+/* Alert */
+.alert-container {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1000;
+  max-width: 400px;
+}
+
+.alert {
+  padding: 15px;
+  border-radius: var(--radius-md);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  animation: slideIn 0.3s ease-out forwards;
+  box-shadow: var(--shadow-md);
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.alert i {
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+.alert-success {
+  background: rgba(197, 248, 199, 0.9);
+  border-left: 4px solid #48bb78;
+  color: #2f855a;
+}
+
+.alert-info {
+  background: rgba(196, 224, 255, 0.9);
+  border-left: 4px solid #4299e1;
+  color: #2b6cb0;
+}
+
+.alert-warning {
+  background: rgba(255, 244, 189, 0.9);
+  border-left: 4px solid #ecc94b;
+  color: #975a16;
+}
+
+.alert-error {
+  background: rgba(255, 214, 224, 0.9);
+  border-left: 4px solid #f56565;
+  color: #c53030;
+}
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar améliorée -->
+        <aside class="sidebar">
+            <div class="logo-container">
+                <img src="{% static 'images/logo.png' %}" alt="Logo" onerror="this.src='https://via.placeholder.com/60'; this.onerror=null;">
+                <div class="logo-text">🎓 ThèseManager</div>
+            </div>
+            <ul class="menu">
+                <li class="menu-item">
+                    <a href="#" class="menu-link">
+                        <span class="menu-icon"><i class="fas fa-home"></i></span>
+                        <span class="menu-title">Accueil</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'tableau_theses_comite' %}" class="menu-link">
+                        <span class="menu-icon"><i class="fas fa-copy"></i></span>
+                        <span class="menu-title">Copie 0</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'rapport_inter' %}" class="menu-link">
+                        <span class="menu-icon"><i class="fas fa-file-alt"></i></span>
+                        <span class="menu-title">Rapport intermédiaire</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link">
+                        <span class="menu-icon"><i class="fas fa-star"></i></span>
+                        <span class="menu-title">Évaluation</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="{% url 'composition_jury' %}" class="menu-link active">
+                        <span class="menu-icon"><i class="fas fa-users"></i></span>
+                        <span class="menu-title">Composition jury</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="#" class="menu-link">
+                        <span class="menu-icon"><i class="fas fa-sign-out-alt"></i></span>
+                        <span class="menu-title">Déconnexion</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Container principal -->
+        <div class="container">
+            <div class="wave-top">
+                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+                </svg>
+            </div>
+
+            <form method="get" class="search-form">
+                <input type="text" name="q" placeholder="Rechercher une thèse..." value="{{ q }}" class="form-control">
+                <button type="submit" class="btn btn-primary">Rechercher</button>
+            </form>
+
+            <p><strong>{{ nb_theses }}</strong> thèses en attente de composition</p>
+            
+            {% if these %}
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-graduation-cap"></i> {{ these.titre }}</h2>
+                </div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label><i class="fas fa-user-graduate"></i> Doctorant :</label>
+                        <div class="form-control" readonly>
+                            {% if these.utilisateur %}
+                                {{ these.utilisateur }}
+                            {% else %}
+                                Inconnu
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-chalkboard-teacher"></i> Encadrant :</label>
+                        <div class="form-control" readonly>
+                            {% if these.encadreur %}
+                                {{ these.encadreur }}
+                            {% else %}
+                                Inconnu
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <form method="post" action="{% url 'valider_composition' these.id %}" onsubmit="return confirmerComposition()">
+                        {% csrf_token %}
+
+                                        <div class="form-group">
+    <label><i class="fas fa-user-edit"></i> Rapporteur :</label>
+    <div class="form-control" readonly>
+        {% with rapporteur=rapporteurs_map|get_item:these.id %}
+            <!-- Affiche l'objet rapporteur pour déboguer -->
+            {{ rapporteur }}
+            {% if rapporteur and rapporteur.nom %}
+                {{ rapporteur.nom }}
+            {% else %}
+              
+            {% endif %}
+        {% endwith %}
+    </div>
+</div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="president"><i class="fas fa-user-tie"></i> Président :</label>
+                                <select name="president" id="president" class="form-control" required>
+                                    <option value="">-- Choisir un professeur --</option>
+                                    {% for prof in professeurs %}
+                                        <option value="{{ prof.id }}">{{ prof.get_full_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="examinateur"><i class="fas fa-search"></i> Examinateur :</label>
+                                <select name="examinateur" id="examinateur" class="form-control" required>
+                                    <option value="">-- Choisir un professeur --</option>
+                                    {% for prof in professeurs %}
+                                        <option value="{{ prof.id }}">{{ prof.get_full_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="redacteur"><i class="fas fa-pen"></i> Rédacteur :</label>
+                            <select name="redacteur" id="redacteur" class="form-control" required>
+                                <option value="">-- Choisir un professeur --</option>
+                                {% for prof in professeurs %}
+                                    <option value="{{ prof.id }}">{{ prof.get_full_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Valider la composition</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="navigation-buttons">
+                {% if index > 0 %}
+                    <a href="?page={{ index|add:"-1" }}{% if q %}&q={{ q }}{% endif %}" class="btn btn-secondary">← Précédent</a>
+                {% endif %}
+                {% if index < nb_theses|add:"-1" %}
+                    <a href="?page={{ index|add:"1" }}{% if q %}&q={{ q }}{% endif %}" class="btn btn-secondary">Suivant →</a>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="card">
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i> Aucune thèse éligible pour la composition du jury.
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <div class="wave-bottom">
+                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+    
+    {% if messages %}
+    <div class="alert-container">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                <i class="fas fa-info-circle"></i> {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <script>
+    function confirmerComposition() {
+        return confirm("Voulez-vous confirmer cette composition avec les données sélectionnées ?");
+    }
+    </script>
+</body>
+</html>

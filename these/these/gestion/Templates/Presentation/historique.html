@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Suivi de Thèse</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f9f9f9;
+        }
+
+        .etape {
+            background-color: white;
+            border-left: 5px solid #007bff;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .arrow {
+            text-align: center;
+            font-size: 24px;
+            color: #007bff;
+            margin: -10px 0 10px;
+        }
+
+        .icone {
+            margin-left: 10px;
+        }
+
+        .message {
+            color: #555;
+            font-size: 0.95em;
+            margin-left: 10px;
+        }
+
+        .link {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Suivi de votre thèse</h1>
+
+    <!-- Étape 1 : Copie 0 -->
+    <div class="etape">
+        <strong>Étape 1 : Soumission de la Copie 0</strong>
+        {% if these %}
+            <i class="fas fa-check-circle icone" style="color:green;"></i>
+            {% if these.approuve_par_comite %}
+                <span class="message">Copie 0 approuvée</span>
+            {% else %}
+                <span class="message">Attendez l’approbation du comité</span>
+            {% endif %}
+        {% else %}
+            <a href="{% url 'copie_zero' %}" class="link">Soumettre la copie 0</a>
+        {% endif %}
+    </div>
+
+    <!-- Étape 2 : Rapport Intermédiaire -->
+    {% if these and these.approuve_par_comite %}
+        <div class="arrow">↓</div>
+        <div class="etape">
+            <strong>Étape 2 : Soumission du Rapport Intermédiaire</strong>
+            {% if rapport_inter %}
+                <i class="fas fa-check-circle icone" style="color:green;"></i>
+                <span class="message">Rapport intermédiaire soumis - en attente d’approbation</span>
+            {% else %}
+                <a href="{% url 'rapport_intermediaire' %}" class="link">Soumettre le rapport intermédiaire</a>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <!-- Étape 3 : Rapport Final -->
+    {% if rapport_inter %}
+        <div class="arrow">↓</div>
+        <div class="etape">
+            <strong>Étape 3 : Soumission du Rapport Final</strong>
+            {% if these.rapports_finals.all %}
+                <i class="fas fa-check-circle icone" style="color:green;"></i>
+                <span class="message">Rapport final soumis</span>
+            {% else %}
+                <a href="{% url 'rapport_final' %}" class="link">Soumettre le rapport final</a>
+            {% endif %}
+        </div>
+    {% endif %}
+
+</body>
+</html>

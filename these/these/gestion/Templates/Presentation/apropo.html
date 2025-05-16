@@ -1,0 +1,482 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>École Doctorale de Djibouti : Excellence Académique & Médicale</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    /* Variables globales */
+    :root {
+      --primary-color: #a7c5eb;
+      --secondary-color: #a7c5eb;
+      --accent-color: #ff9900;
+      --text-color: #333;
+      --text-light: #666;
+      --background-light: #f5f5f5;
+      --background-dark: #a7c5eb;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --primary: #8db5e2; /* Bleu pastel pour les boutons */
+      --secondary: #e6c3c3;
+      --dark: #333;
+      --white: #fff;
+    }
+    
+    /* Body */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--background-light);
+      color: var(--text-color);
+      line-height: 1.6;
+      margin-top: 80px; /* Espace pour le header fixe */
+    }
+    
+    /* Header */
+    header {
+        background-color: var(--white);
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        transition: all 0.3s ease;
+    }
+    
+    header.scrolled {
+        padding: 5px 0;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+    }
+    
+    .header-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        transition: all 0.3s ease;
+    }
+    
+    .logo {
+        display: flex;
+        align-items: center;
+        font-size: 24px;
+        font-weight: bold;
+        color: var(--primary);
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .logo img {
+        height: 40px;
+        margin-right: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .logo span {
+        color: var(--dark);
+    }
+    
+    .nav-links {
+        display: flex;
+        list-style: none;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-links li {
+        margin-left: 30px;
+        position: relative;
+    }
+    
+    .nav-links a {
+        text-decoration: none;
+        color: var(--dark);
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+    }
+
+    .nav-links a i {
+        margin-right: 6px;
+    }
+    
+    .nav-links a:hover {
+        color: var(--primary);
+    }
+
+    .nav-links a::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        background: var(--primary);
+        bottom: -5px;
+        left: 0;
+        transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover::after {
+        width: 100%;
+    }
+    
+    .nav-links .active {
+        color: var(--primary);
+    }
+
+    .nav-links .active::after {
+        width: 100%;
+    }
+    
+    .btn {
+        background-color: var(--primary);
+        color: var(--white);
+        padding: 12px 24px;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 5px 15px rgba(167, 197, 235, 0.4);
+    }
+
+    .btn i {
+        margin-right: 8px;
+    }
+    
+    .btn:hover {
+        background-color: #a9c7eb;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(167, 197, 235, 0.6);
+    }
+
+    .btn-outline {
+        background-color: transparent;
+        border: 2px solid var(--primary);
+        color: var(--primary);
+        box-shadow: none;
+    }
+
+    .btn-outline:hover {
+        background-color: var(--primary);
+        color: var(--white);
+    }
+
+    .btn-secondary {
+        background-color: var(--secondary);
+        box-shadow: 0 5px 15px rgba(230, 195, 195, 0.4);
+    }
+
+    .btn-secondary:hover {
+        background-color: #d9b3b3;
+        box-shadow: 0 8px 20px rgba(230, 195, 195, 0.6);
+    }
+    
+    .main-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 80px); /* Ajustement pour le header */
+        position: relative;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      max-width: 1200px;
+      margin: 30px auto;
+      background-color: #fff;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      overflow: hidden;
+    }
+    
+    /* Header principal */
+    .header-main {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+    }
+    
+    .header-main h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+    
+    .header-main h2 {
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 20px;
+    }
+    
+    /* Content */
+    .content-wrapper {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+    
+    .left-panel {
+      flex: 3;
+      padding: 30px;
+      background-color: white;
+    }
+    
+    .right-panel {
+      flex: 1;
+      padding: 30px;
+      background-color: var(--background-light);
+      border-left: 1px solid #e6e6e6;
+    }
+    
+    /* Sections */
+    .section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background-color: white;
+      border-left: 4px solid var(--primary-color);
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+      color: var(--primary-color);
+      margin-bottom: 15px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #eee;
+    }
+    
+    p {
+      margin-bottom: 15px;
+      text-align: justify;
+      color: var(--text-color);
+    }
+    
+    /* Images */
+    .image-container {
+      margin-bottom: 25px;
+    }
+    
+    .image-container img {
+      width: 100%;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      margin-bottom: 10px;
+    }
+    
+    .image-caption {
+      font-style: italic;
+      color: var(--text-light);
+      text-align: center;
+      font-size: 0.9rem;
+    }
+    
+    /* Citations */
+    .quote {
+      background-color: #f9f9f9;
+      border-left: 4px solid var(--accent-color);
+      padding: 15px;
+      margin: 15px 0;
+      font-style: italic;
+      color: var(--text-light);
+    }
+    
+    /* Liens */
+    .link-group {
+      text-align: center;
+      margin: 30px 0;
+    }
+    
+    a.button {
+      display: inline-block;
+      padding: 12px 25px;
+      background-color: var(--primary); /* Bleu pastel comme les autres boutons */
+      color: white;
+      text-decoration: none;
+      border-radius: 30px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+    }
+    
+    a.button:hover {
+      background-color: #a9c7eb;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Footer */
+    .footer {
+      background-color: var(--background-dark);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .content-wrapper {
+        flex-direction: column;
+      }
+      
+      .right-panel {
+        border-left: none;
+        border-top: 1px solid #e6e6e6;
+      }
+      
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header avec navigation -->
+  <header id="accueil">
+    <div class="header-container">
+      <div class="header-content">
+        <a href="#" class="logo">
+          <img src="{% static 'images/logo.png' %}">
+        </a>
+        <ul class="nav-links">
+          <li><a href="{% url 'presentation' %}" class="active"><i class="fas fa-home"></i> Accueil</a></li>
+          <li><a href="{% url 'apropo' %}"><i class="fas fa-info-circle"></i> À propos</a></li>
+          <li><a href="{% url 'connexion' %}"><i class="fas fa-sign-in-alt"></i> Connexion</a></li>
+          <li><a href="{% url 'demande_inscription' %}"  class="btn"><i class="fas fa-file-medical"></i> Demander de connexion</a></li>
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Header principal -->
+    <div class="header-main">
+      <h1>École Doctorale de Djibouti</h1>
+      <h2>Excellence Académique & Médicale</h2>
+    </div>
+    
+    <div class="content-wrapper">
+      <!-- Panneau de contenu principal -->
+      <div class="left-panel">
+        <div class="section">
+          <h3>Introduction</h3>
+          <p>
+            Fondée dans le cadre de l'expansion de l'Université de Djibouti, l'école doctorale pluridisciplinaire a été créée afin de promouvoir l'excellence de la recherche. Elle forme des doctorants dans divers domaines, en sciences académiques et en médecine, et contribue activement à l'essor scientifique et technologique du pays.
+          </p>
+        </div>
+
+        <div class="section">
+          <h3>Histoire et Création</h3>
+          <p>
+            La transformation du Pôle Universitaire en université de plein exercice en 2006 a ouvert la voie à la création d'une école doctorale, officialisée par le décret n°2017-118/PR/MENSUR. Depuis, elle s'impose comme le moteur de l'innovation en formant des chercheurs aptes à relever les défis nationaux et régionaux.
+          </p>
+          <p>
+            Les premières promotions ont bénéficié d'un encadrement international, grâce à des partenariats stratégiques avec des institutions françaises, tunisiennes, et d'autres partenaires reconnus.
+          </p>
+        </div>
+
+        <div class="section">
+          <h3>Domaines Académiques d'Excellence</h3>
+          <p>
+            L'école doctorale met l'accent sur la recherche fondamentale et appliquée dans divers domaines académiques. Elle propose des programmes interdisciplinaires en sciences humaines, sciences exactes et ingénierie, favorisant l'émergence de solutions innovantes adaptées aux problématiques contemporaines.
+          </p>
+        </div>
+
+        <div class="section">
+          <h3>Excellence dans le Domaine Médical</h3>
+          <p>
+            En partenariat avec la Faculté de Médecine, l'école doctorale offre un cursus de haut niveau en recherche médicale. Les doctorants travaillent sur des projets innovants visant à améliorer les pratiques de soins et à développer des méthodes de recherche adaptées aux réalités locales.
+          </p>
+        </div>
+
+        <div class="section">
+          <h3>Partenariats & Décrets Fondateurs</h3>
+          <p>
+            L'école doctorale bénéficie d'un solide ancrage institutionnel grâce à ses partenariats avec des universités et organismes de recherche internationaux. Le décret n°2017-118/PR/MENSUR souligne l'importance de cette structure pour renforcer la mobilité des doctorants et la qualité de la recherche.
+          </p>
+        </div>
+
+        <div class="section">
+          <h3>Perspectives et Défis</h3>
+          <p>
+            L'école doctorale se trouve à un tournant crucial : consolider ses infrastructures, accroître le nombre de doctorants, et diversifier ses axes de recherche pour renforcer l'impact de la recherche scientifique sur le développement national.
+          </p>
+        </div>
+
+        <div class="link-group">
+          <a href="#" class="button">Contactez-nous pour en savoir plus</a>
+        </div>
+      </div>
+
+      <!-- Panneau latéral avec images et citations -->
+      <div class="right-panel">
+        <div class="image-container">
+          <img src="{% static 'images/universite.jpg' %}" alt="Campus universitaire">
+          <div class="image-caption">Campus universitaire moderne</div>
+        </div>
+        
+        <div class="quote">
+          "La recherche, moteur d'innovation et de développement, trouve ici son écrin d'excellence."
+        </div>
+        
+        <div class="image-container">
+          <img src="{% static 'images/doctorant.jpg' %}" alt="Doctorants en recherche">
+          <div class="image-caption">Nos doctorants en pleine recherche</div>
+        </div>
+        
+        <div class="quote">
+          "L'école doctorale de Djibouti, un pont entre tradition et modernité."
+        </div>
+        
+        <div class="image-container">
+          <img src="{% static 'images/recherche.jpg' %}" alt="Recherche en médecine">
+          <div class="image-caption">Recherche médicale avancée</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+      <p>&copy; 2025 École Doctorale de Djibouti - Tous droits réservés</p>
+    </div>
+  </div>
+
+  <script>
+    // Script pour gérer l'effet de scroll sur le header
+    window.addEventListener('scroll', function() {
+      const header = document.querySelector('header');
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+  </script>
+</body>
+</html>

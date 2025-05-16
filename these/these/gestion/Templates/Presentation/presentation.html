@@ -1,0 +1,1317 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ThèseMed - Gestion des thèses de doctorat en médecine</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        :root {
+            --primary: #a7c5eb; /* Bleu pastel */
+            --secondary: #e6c3c3; /* Rose pastel */
+            --accent: #b5d8cc; /* Vert pastel */
+            --light: #f8f9fa;
+            --dark: #5b6d7f;
+            --white: #ffffff;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Animations générales */
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        /* Header */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        header.scrolled {
+            padding: 5px 0;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .logo span {
+            color: var(--dark);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+            position: relative;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a i {
+            margin-right: 6px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-links .active {
+            color: var(--primary);
+        }
+
+        .nav-links .active::after {
+            width: 100%;
+        }
+        
+        .btn {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 12px 24px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(167, 197, 235, 0.4);
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .btn:hover {
+            background-color: #8db5e2;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(167, 197, 235, 0.6);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+            box-shadow: 0 5px 15px rgba(230, 195, 195, 0.4);
+        }
+
+        .btn-secondary:hover {
+            background-color: #d9b3b3;
+            box-shadow: 0 8px 20px rgba(230, 195, 195, 0.6);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(167, 197, 235, 0.3) 0%, rgba(230, 195, 195, 0.3) 100%);
+            color: var(--dark);
+            padding: 180px 0 120px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/api/placeholder/1200/600');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .hero-text {
+            flex: 1;
+            padding-right: 30px;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .hero h1::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background: var(--secondary);
+            bottom: -10px;
+            left: 0;
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+        }
+        
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .hero-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .hero-stats {
+            display: flex;
+            margin-top: 50px;
+            gap: 30px;
+        }
+
+        .hero-stat {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .hero-stat:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero-stat h3 {
+            font-size: 32px;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .hero-stat p {
+            font-size: 14px;
+            margin-bottom: 0;
+        }
+        
+        /* How it works Section */
+        .how-it-works {
+            padding: 100px 0;
+            background-color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 36px;
+            color: var(--dark);
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 3px;
+            background: var(--secondary);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .section-title p {
+            color: var(--dark);
+            opacity: 0.8;
+            max-width: 700px;
+            margin: 15px auto 0;
+        }
+
+        .process-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+            margin-top: 50px;
+        }
+
+        .process-step {
+            flex: 1;
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .process-step::after {
+            content: '';
+            position: absolute;
+            width: 70%;
+            height: 2px;
+            background: var(--primary);
+            top: 60px;
+            right: -35%;
+            z-index: -1;
+        }
+
+        .process-step:last-child::after {
+            display: none;
+        }
+
+        .step-icon {
+            width: 120px;
+            height: 120px;
+            background-color: rgba(167, 197, 235, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            position: relative;
+            transition: all 0.3s ease;
+            border: 2px dashed var(--primary);
+        }
+
+        .step-icon::before {
+            content: attr(data-step);
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(167, 197, 235, 0.5);
+        }
+
+        .step-icon i {
+            font-size: 40px;
+            color: var(--primary);
+            transition: all 0.3s ease;
+        }
+
+        .process-step:hover .step-icon {
+            transform: scale(1.1);
+            background-color: rgba(167, 197, 235, 0.2);
+            border-color: var(--primary);
+        }
+
+        .process-step:hover .step-icon i {
+            transform: rotateY(360deg);
+            transition: transform 0.8s ease;
+        }
+
+        .process-step h3 {
+            margin: 20px 0 15px;
+            font-size: 22px;
+            transition: all 0.3s ease;
+        }
+
+        .process-step:hover h3 {
+            color: var(--primary);
+        }
+
+        .process-step p {
+            color: var(--dark);
+            opacity: 0.8;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 100px 0;
+            background-color: rgba(181, 216, 204, 0.1);
+            position: relative;
+        }
+
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/api/placeholder/1200/600');
+            background-position: center;
+            background-size: cover;
+            opacity: 0.03;
+        }
+        
+        .features-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .feature-item {
+            background-color: var(--white);
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .feature-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 0;
+            background: linear-gradient(135deg, rgba(167, 197, 235, 0.1) 0%, rgba(181, 216, 204, 0.1) 100%);
+            transition: all 0.4s ease;
+            z-index: -1;
+        }
+        
+        .feature-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-item:hover::before {
+            height: 100%;
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background-color: rgba(167, 197, 235, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-icon i {
+            color: var(--primary);
+            font-size: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item:hover .feature-icon {
+            background-color: var(--primary);
+        }
+        
+        .feature-item:hover .feature-icon i {
+            color: var(--white);
+            transform: rotateY(360deg);
+            transition: transform 0.8s ease, color 0.3s ease;
+        }
+        
+        .feature-item h3 {
+            margin-bottom: 15px;
+            font-size: 22px;
+            position: relative;
+            padding-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item h3::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 2px;
+            background: var(--secondary);
+            bottom: 0;
+            left: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item:hover h3::after {
+            width: 80px;
+        }
+        
+        .feature-item p {
+            color: var(--dark);
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+        
+        .feature-item a {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary);
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item a i {
+            margin-left: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item a:hover {
+            color: var(--secondary);
+        }
+        
+        .feature-item a:hover i {
+            transform: translateX(5px);
+        }
+        
+        /* Testimonials Section */
+        .testimonials {
+            padding: 100px 0;
+            background-color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .testimonial-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .testimonial-item {
+            background-color: var(--light);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            margin: 30px auto;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .testimonial-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .testimonial-item::before {
+            content: '\f10d';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 30px;
+            color: rgba(167, 197, 235, 0.2);
+        }
+
+        .testimonial-content {
+            margin-bottom: 20px;
+            font-style: italic;
+            color: var(--dark);
+            opacity: 0.9;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+
+        .author-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 15px;
+            border: 3px solid var(--primary);
+        }
+
+        .author-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .author-info h4 {
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .author-info p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 100px 0;
+            background: linear-gradient(135deg, rgba(167, 197, 235, 0.9) 0%, rgba(181, 216, 204, 0.9) 100%);
+            color: var(--white);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('/api/placeholder/1200/600');
+            background-position: center;
+            background-size: cover;
+            opacity: 0.05;
+            z-index: 0;
+        }
+        
+        .cta-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        
+        .cta p {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .cta .btn {
+            background-color: var(--white);
+            color: var(--primary);
+        }
+
+        .cta .btn:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .cta .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--white);
+            color: var(--white);
+        }
+
+        .cta .btn-outline:hover {
+            background-color: var(--white);
+            color: var(--primary);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: var(--white);
+            padding: 80px 0 30px;
+            position: relative;
+        }
+
+        .footer-wave {
+            position: absolute;
+            top: -70px;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.11,150.07,130.62,233.64,120.29,324.47,108.87,260.51,68.34,321.39,56.44Z' fill='%235b6d7f'%3E%3C/path%3E%3C/svg%3E");
+            background-size: cover;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 2px;
+            background: var(--primary);
+            bottom: 0;
+            left: 0;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-column a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .footer-column a i {
+            margin-right: 8px;
+            font-size: 14px;
+        }
+        
+        .footer-column a:hover {
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .footer-column p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-link i {
+            color: var(--white);
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .newsletter form {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        .newsletter input {
+            flex: 1;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 30px 0 0 30px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .newsletter button {
+            padding: 0 20px;
+            background-color: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 0 30px 30px 0;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .newsletter button:hover {
+            background-color: #8db5e2;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+
+        .go-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 99;
+        }
+
+        .go-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .go-top:hover {
+            background-color: var(--secondary);
+            transform: translateY(-5px);
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-text {
+                padding-right: 0;
+                margin-bottom: 40px;
+            }
+
+            .hero h1::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .hero-stats {
+                justify-content: center;
+            }
+
+            .process-steps {
+                flex-direction: column;
+                gap: 50px;
+            }
+
+            .process-step::after {
+                width: 2px;
+                height: 50px;
+                top: 100%;
+                right: auto;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .features-container {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .hero-stats {
+                flex-wrap: wrap;
+            }
+
+            .hero-stat {
+                flex: 1 0 40%;
+            }
+            
+            .section-title h2 {
+                font-size: 28px;
+            }
+
+            .testimonial-item {
+                padding: 30px;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Animation keyframes */
+        @keyframes slideIn {
+            from {
+                transform: translateX(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize WOW.js
+            new WOW().init();
+            
+            // Header scroll effect
+            window.addEventListener('scroll', function() {
+                const header = document.querySelector('header');
+                const scrollY = window.scrollY;
+
+                if (scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // Go to top button
+            const goTop = document.querySelector('.go-top');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 500) {
+                    goTop.classList.add('active');
+                } else {
+                    goTop.classList.remove('active');
+                }
+            });
+
+            goTop.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        window.scrollTo({
+                            top: target.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <!-- Header -->
+    <header id="accueil">
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">
+                    <img src="{% static 'images/logo.png' %}">
+                   
+                </a>
+                <ul class="nav-links">
+                    <li><a href="{% url 'presentation' %}" class="active"><i class="fas fa-home"></i> Accueil</a></li>
+                    <li><a href="{% url 'apropo' %}"><i class="fas fa-info-circle"></i> À propos</a></li>
+                    <li><a href="{% url 'connexion' %}"><i class="fas fa-sign-in-alt"></i> Connexion</a></li>
+                    <li><a href="{% url 'demande_inscription' %}"  class="btn"><i class="fas fa-file-medical"></i> Demander de connexion</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text wow animate__animated animate__fadeInLeft" data-wow-delay="0.2s">
+                    <h1>Gérez votre <span>thèse de doctorat</span> en médecine en toute simplicité</h1>
+                    <p>Notre plateforme facilite le processus de dépôt, de validation et de soutenance de votre thèse médicale, avec un suivi détaillé à chaque étape.</p>
+                    <div class="hero-buttons">
+                        <a href="{% url 'demande_inscription' %}" class="btn pulse"><i class="fas fa-file-upload"></i> Demander d'accées</a>
+                      
+                    </div>
+                    <div class="hero-stats">
+                        <div class="hero-stat wow animate__animated animate__fadeIn" data-wow-delay="0.7s">
+                            <h3>95%</h3>
+                            <p>Taux de réussite</p>
+                        </div>
+                        <div class="hero-stat wow animate__animated animate__fadeIn" data-wow-delay="0.9s">
+                            <h3>48h</h3>
+                            <p>Délai de réponse moyen</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-image wow animate__animated animate__fadeInRight" data-wow-delay="0.4s">
+                    <img src="{% static 'images/thesee.jpg' %}" width="700" halt="Gestion de thèse" class="float">
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works Section -->
+    <section class="how-it-works" id="how">
+        <div class="container">
+            <div class="section-title wow animate__animated animate__fadeIn">
+                <h2>Comment ça fonctionne</h2>
+                <p>Notre plateforme simplifie chaque étape du processus de gestion de votre thèse de doctorat en médecine.</p>
+            </div>
+            <div class="process-steps">
+                <div class="process-step wow animate__animated animate__fadeInUp" data-wow-delay="0.2s">
+                    <div class="step-icon" data-step="1">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h3>Inscription</h3>
+                    <p>Demander le droit d'accées et complétez votre copie 0 .</p>
+                </div>
+                <div class="process-step wow animate__animated animate__fadeInUp" data-wow-delay="0.4s">
+                    <div class="step-icon" data-step="2">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                    <h3>Soumission</h3>
+                    <p>Soumettez votre copie 0 , puis votre copie intermediaire , attendez des retours de la part du comité.</p>
+                </div>
+                <div class="process-step wow animate__animated animate__fadeInUp" data-wow-delay="0.6s">
+                    <div class="step-icon" data-step="3">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h3>Évaluation</h3>
+                    <p>Suivez en temps réel l'évolution de votre dossier et les commentaires du comité.</p>
+                </div>
+                <div class="process-step wow animate__animated animate__fadeInUp" data-wow-delay="0.8s">
+                    <div class="step-icon" data-step="4">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Soutenance</h3>
+                    <p>Préparez-vous pour votre soutenance et partagez l'invitation avec vos proches et collègues.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-title wow animate__animated animate__fadeIn">
+                <h2>Fonctionnalités principales</h2>
+                <p>Notre plateforme offre de nombreuses fonctionnalités pour faciliter chaque étape de votre parcours doctoral.</p>
+            </div>
+            <div class="features-container">
+                <div class="feature-item wow animate__animated animate__fadeInUp" data-wow-delay="0.1s">
+                    <div class="feature-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <h3>Dépôt simplifié</h3>
+                    <p>Soumettez votre thèse en quelques clics avec notre interface intuitive et conviviale.</p>
+                   
+                </div>
+                <div class="feature-item wow animate__animated animate__fadeInUp" data-wow-delay="0.3s">
+                    <div class="feature-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3>Communication directe</h3>
+                    <p>Échangez facilement avec les membres du personnel.</p>
+                    
+                </div>
+                <div class="feature-item wow animate__animated animate__fadeInUp" data-wow-delay="0.5s">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Suivi en temps réel</h3>
+                    <p>Visualisez l'avancement de votre thèse à chaque étape du processus d'évaluation.</p>
+                </div>
+                <div class="feature-item wow animate__animated animate__fadeInUp" data-wow-delay="0.2s">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3> soutenance</h3>
+                    <p>Preparez-vous pour votre soutenance et partagez automatiquement des invitations personnalisées.</p>
+                    
+                </div>
+                <div class="feature-item wow animate__animated animate__fadeInUp" data-wow-delay="0.4s">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Sécurité optimale</h3>
+                    <p>Vos documents sont protégés par un système de cryptage avancé et des sauvegardes régulières.</p>
+                </div>
+                <div class="feature-item wow animate__animated animate__fadeInUp" data-wow-delay="0.6s">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Accessible partout</h3>
+                    <p>Accédez à votre espace depuis n'importe quel appareil, même en déplacement.</p>
+                   
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <div class="section-title wow animate__animated animate__fadeIn">
+                <h2>Témoignages</h2>
+                <p>Découvrez ce que nos utilisateurs disent de notre plateforme de gestion de thèses.</p>
+            </div>
+            <div class="testimonial-container">
+                <div class="testimonial-item wow animate__animated animate__fadeIn" data-wow-delay="0.2s">
+                    <div class="testimonial-content">
+                        "ThèseMed a complètement transformé mon expérience de doctorat. J'ai pu soumettre ma thèse sans stress et suivre son évolution en temps réel. La communication avec mon comité était fluide et efficace."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-image">
+                         
+                        </div>
+                        <div class="author-info">
+                            <h4>Dr. Sarah Lemoine</h4>
+                            <p>Cardiologie, Promotion 2024</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-item wow animate__animated animate__fadeIn" data-wow-delay="0.4s">
+                    <div class="testimonial-content">
+                        "En tant que directeur de thèse, ThèseMed me permet de gérer efficacement plusieurs doctorants. L'interface est intuitive et les notifications m'aident à rester à jour avec tous mes étudiants."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-image">
+                           
+                        </div>
+                        <div class="author-info">
+                            <h4>Pr. Martin Dubois</h4>
+                            <p>Neurologie</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta" id="demander">
+        <div class="container">
+            <div class="cta-content wow animate__animated animate__fadeIn">
+                <h2>Prêt à soumettre votre thèse ?</h2>
+                <p>Rejoignez des milliers de doctorants et commencez à gérer votre thèse de médecine sur notre plateforme intuitive et sécurisée.</p>
+                <div class="cta-buttons">
+                    <a href="{% url 'demande_inscription' %}"class="btn"><i class="fas fa-user-plus"></i> Demander l'accèes</a>
+                  
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="about">
+        <div class="footer-wave"></div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>ThèseMed</h3>
+                    <p>Plateforme innovante dédiée à la gestion des thèses de doctorat en médecine. Nous simplifions chaque étape de votre parcours doctoral.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Liens rapides</h3>
+                    <ul>
+                        <li><a href="#accueil"><i class="fas fa-chevron-right"></i> Accueil</a></li>
+                        <li><a href="#features"><i class="fas fa-chevron-right"></i> Fonctionnalités</a></li>
+                        <li><a href="#how"><i class="fas fa-chevron-right"></i> Comment ça marche</a></li>
+                        <li><a href="#testimonials"><i class="fas fa-chevron-right"></i> Témoignages</a></li>
+                        <li><a href="#demander"><i class="fas fa-chevron-right"></i> Commencer</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Newsletter</h3>
+                    <p>Abonnez-vous pour recevoir les dernières actualités et mises à jour.</p>
+                    <div class="newsletter">
+                        <form>
+                            <input type="email" placeholder="Votre email">
+                            <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 ThèseMed. Tous droits réservés.</p>
+            </div>
+        </div>
+        <a href="#" class="go-top"><i class="fas fa-arrow-up"></i></a>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,690 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion Doctorant</title>
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <!-- Animate.css pour les animations -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        :root {
+            --primary: #a7c5eb; /* Bleu pastel */
+            --secondary: #e6c3c3; /* Rose pastel */
+            --accent: #b5d8cc; /* Vert pastel */
+            --light: #f8f9fa;
+            --dark: #5b6d7f;
+            --white: #ffffff;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+            padding-top: 80px; /* Espace pour le header fixe */
+        }
+       
+        /* Header */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        header.scrolled {
+            padding: 5px 0;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .logo span {
+            color: var(--dark);
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+            position: relative;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a i {
+            margin-right: 6px;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-links .active {
+            color: var(--primary);
+        }
+
+        .nav-links .active::after {
+            width: 100%;
+        }
+        
+        .btn {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 12px 24px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(167, 197, 235, 0.4);
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .btn:hover {
+            background-color: #8db5e2;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(167, 197, 235, 0.6);
+        }
+
+        /* Animations générales */
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 80px); /* Ajustement pour le header */
+            position: relative;
+        }
+        
+        /* Deux panneaux */
+        .panel {
+            width: 50%;
+            min-width: 300px;
+            margin: 0 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Panneau avec image */
+        .image-panel {
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transform: rotate(-2deg);
+            transition: all 0.3s ease;
+            animation: fadeIn 1.5s;
+        }
+        
+        .image-panel:hover {
+            transform: rotate(0);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .image-container {
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .image-panel:hover .image-container img {
+            transform: scale(1.05);
+        }
+        
+        .image-text {
+            padding: 30px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: var(--dark);
+        }
+        
+        .image-text h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .image-text h2::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 3px;
+            background: var(--secondary);
+            bottom: -10px;
+            left: 0;
+        }
+        
+        .image-text p {
+            line-height: 1.6;
+            font-size: 1.1rem;
+            margin-top: 20px;
+            opacity: 0.9;
+        }
+        
+        /* Panneau formulaire */
+        .form-panel {
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            animation: fadeIn 1.5s;
+            transform: rotate(2deg);
+            transition: all 0.3s ease;
+        }
+        
+        .form-panel:hover {
+            transform: rotate(0);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .form-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--dark);
+            padding: 25px;
+            text-align: center;
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+            padding-bottom: 40px;
+        }
+        
+        .form-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .form-header h2::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 3px;
+            background: var(--white);
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .form-header p {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-top: 20px;
+        }
+        
+        .form-body {
+            padding: 30px;
+        }
+        
+        /* Style du formulaire */
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+            transition: all 0.3s ease;
+        }
+        
+        .form-group .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 41px;
+            color: var(--primary);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 12px 12px 45px;
+            border: 2px solid #e1e1e1;
+            border-radius: 30px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(167, 197, 235, 0.3);
+            outline: none;
+        }
+        
+        .form-control:focus + .input-icon {
+            color: var(--primary);
+        }
+        
+        .form-check {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .form-check input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .checkmark {
+            height: 22px;
+            width: 22px;
+            background-color: var(--light);
+            border-radius: 4px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border: 2px solid #e1e1e1;
+        }
+
+        .form-check:hover input ~ .checkmark {
+            border-color: var(--primary);
+        }
+
+        .form-check input:checked ~ .checkmark {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        .form-check input:checked ~ .checkmark:after {
+            display: block;
+        }
+
+        .form-check .checkmark:after {
+            content: "✓";
+            color: white;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: var(--white);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(167, 197, 235, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-submit:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-submit:hover:before {
+            width: 100%;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(167, 197, 235, 0.6);
+            background-color: #8db5e2;
+        }
+        
+        .btn-submit:active {
+            transform: translateY(1px);
+        }
+        
+        .form-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        .form-links a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-links a:hover {
+            color: var(--secondary);
+            text-decoration: underline;
+        }
+
+        .form-divider {
+            margin: 30px 0;
+            position: relative;
+            text-align: center;
+        }
+
+        .form-divider:before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: #e1e1e1;
+        }
+
+        .form-divider span {
+            background-color: var(--white);
+            padding: 0 15px;
+            position: relative;
+            color: var(--dark);
+            opacity: 0.8;
+        }
+
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--light);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            font-size: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn.google {
+            color: #DB4437;
+        }
+
+        .social-btn.microsoft {
+            color: #0078D4;
+        }
+
+        .social-btn.github {
+            color: #333;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* Media queries */
+        @media (max-width: 992px) {
+            .main-container {
+                flex-direction: column;
+                padding: 20px;
+            }
+            
+            .panel {
+                width: 100%;
+                margin: 10px 0;
+            }
+            
+            .image-panel {
+                margin-bottom: 20px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 10px;
+            }
+            
+            .form-body {
+                padding: 20px;
+            }
+            
+            .image-text h2 {
+                font-size: 1.5rem;
+            }
+            
+            .image-text p {
+                font-size: 0.9rem;
+            }
+            
+            .form-header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .nav-links {
+                display: none; /* Pour la version mobile, vous pourriez ajouter un menu hamburger */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header id="accueil">
+        <div class="header-container">
+            <div class="header-content">
+                <a href="#" class="logo">
+                    <img src="{% static 'images/logo.png' %}">
+                </a>
+                <ul class="nav-links">
+                    <li><a href="{% url 'presentation' %}"><i class="fas fa-home"></i> Accueil</a></li>
+                    <li><a href="{% url 'apropo' %}"><i class="fas fa-info-circle"></i> À propos</a></li>
+                    <li><a href="{% url 'connexion' %}" class="active"><i class="fas fa-sign-in-alt"></i> Connexion</a></li>
+                    <li><a href="{% url 'demande_inscription' %}"  class="btn"><i class="fas fa-file-medical"></i> Demander de connexion</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+    <div class="main-container">
+        <!-- Panneau image -->
+        <div class="panel image-panel fade-in">
+            <div class="image-container">
+                <img src="{% static 'images/universite.jpg' %}" alt="Campus universitaire">
+            </div>
+            <div class="image-text">
+                <h2>Espace Doctorant</h2>
+                <p>Bienvenue dans votre espace personnel. Connectez-vous pour accéder à vos ressources, suivre l'avancement de vos travaux de recherche et rester en contact avec votre directeur de thèse.</p>
+                <p>Vous n'avez pas encore de compte ? Veuillez contacter l'administration du programme doctoral ou soumettre une demande d'inscription.</p>
+            </div>
+        </div>
+        
+        <!-- Panneau formulaire -->
+        <div class="panel form-panel fade-in">
+            <div class="form-header">
+                <h2>Connexion</h2>
+                <p>Veuillez vous identifier</p>
+            </div>
+            <div class="form-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="id_username">Nom d'utilisateur ou Email</label>
+                        <input type="text" name="username" id="id_username" class="form-control" placeholder="Entrez votre identifiant" required>
+                        <i class="fas fa-user input-icon"></i>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="id_password">Mot de passe</label>
+                        <input type="password" name="password" id="id_password" class="form-control" placeholder="Entrez votre mot de passe" required>
+                        <i class="fas fa-lock input-icon"></i>
+                    </div>
+                    
+                    <label class="form-check">
+                        <input type="checkbox" name="remember" id="id_remember">
+                        <span class="checkmark"></span>
+                        Se souvenir de moi
+                    </label>
+
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-sign-in-alt"></i> Connexion
+                    </button>
+                    
+                    <div class="form-links">
+                        <a href="{% url 'password_reset' %}">Mot de passe oublié ?</a>
+                        <a href="{% url 'admin:index' %}">Admin</a>
+                    </div>
+                    
+                    
+                
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script pour l'effet de défilement du header -->
+    <script>
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        
+        // Animation des champs du formulaire
+        document.addEventListener('DOMContentLoaded', function() {
+            const formFields = document.querySelectorAll('.form-control');
+            formFields.forEach(field => {
+                field.addEventListener('focus', function() {
+                    this.parentElement.querySelector('label').style.color = 'var(--primary)';
+                });
+                
+                field.addEventListener('blur', function() {
+                    if (!this.value) {
+                        this.parentElement.querySelector('label').style.color = '';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
