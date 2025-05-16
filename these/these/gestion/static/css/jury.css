@@ -1,0 +1,119 @@
+/* 🌟 Général */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f7f9fc;
+    color: #333;
+}
+
+/* 📌 Conteneur principal */
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* 🎨 Barre latérale */
+.sidebar {
+    width: 260px;
+    background: linear-gradient(145deg, #2c3e50, #34495e);
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar .logo h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #f39c12;
+}
+
+.menu ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+}
+
+.menu li {
+    margin: 15px 0;
+    width: 100%;
+}
+
+.menu a {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    width: 100%;
+    border-radius: 8px;
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    transition: background 0.3s, transform 0.2s ease;
+}
+
+.menu a:hover {
+    background: #f39c12;
+    color: #fff;
+    transform: scale(1.05);
+}
+
+/* 📌 Contenu principal */
+.main-content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 🎯 En-tête */
+.header h1 {
+    font-size: 32px;
+    margin-bottom: 15px;
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+/* 📌 Détails de la Thèse */
+.thesis-info {
+    margin-top: 30px;
+}
+
+.thesis-card {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.thesis-card h3 {
+    font-size: 20px;
+    color: #34495e;
+    font-weight: 600;
+}
+
+.thesis-card p {
+    color: #555;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+/* 📌 Déconnexion */
+.logout {
+    background: #e74c3c;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.logout:hover {
+    background: #c0392b;
+}

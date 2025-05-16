@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil de l'étudiant</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        /* Réinitialisation des styles de base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Style général pour le corps */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Menu de navigation */
+nav {
+    background-color: #4CAF50;
+    padding: 10px;
+}
+
+nav ul {
+    list-style-type: none;
+    text-align: center;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    font-size: 18px;
+    text-decoration: none;
+    padding: 10px;
+    transition: background-color 0.3s;
+}
+
+nav ul li a:hover {
+    background-color: #45a049;
+}
+
+/* Conteneur principal */
+.container {
+    background-color: white;
+    width: 80%;
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Titre */
+h2 {
+    text-align: center;
+    font-size: 24px;
+    color: #4CAF50;
+    margin-bottom: 20px;
+}
+
+/* Section du profil */
+.profil {
+    font-size: 18px;
+}
+
+.profil ul {
+    list-style-type: none;
+}
+
+.profil ul li {
+    margin: 10px 0;
+}
+
+.profil ul li strong {
+    font-weight: bold;
+}
+
+/* Responsivité : ajuster la taille de la page sur mobile */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        width: 100%;
+        padding: 15px;
+    }
+
+    nav ul li {
+        display: block;
+        margin: 10px 0;
+    }
+}
+
+    </style>
+
+</head>
+<body>
+    <!-- Menu -->
+    <nav>
+        <ul>
+            <li><a href="{% url 'accueil_etudiant' %}">Accueil</a></li>
+            <li><a href="{% url 'profil_etudiant' %}">Profil</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h2>Informations personnelles</h2>
+        <div class="profil">
+            <ul>
+                <li><strong>Nom :</strong> {{ user.last_name }}</li>
+                <li><strong>Prénom :</strong> {{ user.first_name }}</li>
+                <li><strong>Email :</strong> {{ user.email }}</li>
+                <!-- Ajouter d'autres champs si nécessaire -->
+            </ul>
+        </div>
+
+    </div>
+</body>
+</html>

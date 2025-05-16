@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Rapporteur - Interface Professeur</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 220px;
+            background-color: #2f4557;
+            color: white;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 30px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .sidebar a:hover {
+            background-color: #1f2f3f;
+        }
+
+        .content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .thesis-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .field {
+            margin-bottom: 15px;
+        }
+
+        .field label {
+            font-weight: bold;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .buttons button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .valider { background-color: green; }
+        .avis-sr { background-color: #27ae60; }
+        .avis-mr { background-color: #f39c12; }
+        .avis-mjr { background-color: #e67e22; }
+        .refuser { background-color: red; }
+
+        .navigation {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Professeur</h2>
+            <a href="#">Accueil</a>
+            <a href="#">Président</a>
+            <a href="#" style="background-color: #1f2f3f;">Rapporteur</a>
+            <a href="#">Examinateur</a>
+            <a href="#">Rédacteur</a>
+            <a href="#">Profil</a>
+            <a href="#">Historique</a>
+            <a href="#">Déconnexion</a>
+        </div>
+
+        <div class="content">
+            <h1>Liste des thèses (<span>{{ total }}</span> sans décision)</h1>
+
+            {% if affectation %}
+            <div class="thesis-card">
+                <div class="field">
+                    <label>Titre :</label>
+                    <div>{{ affectation.these.titre }}</div>
+                </div>
+
+                <div class="field">
+                    <label>Rapport intermédiaire :</label>
+                    {% if affectation.these.rapport_intermediaire %}
+                          <a href="{{ affectation.these.rapport_intermediaire.url }}" target="_blank">📄 Télécharger</a>
+                    {% else %}
+                        <span>Pas de document</span>
+                    {% endif %}
+                   
+
+                </div>
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="field">
+                        <label>Grille d'évaluation :</label>
+                        <input type="file" name="grille" required>
+                    </div>
+
+                    <div class="buttons">
+                        <button type="submit" name="decision" value="valider" class="valider">Valider</button>
+                        <button type="submit" name="decision" value="avis_sr" class="avis-sr">Avis favorable sans réserve</button>
+                        <button type="submit" name="decision" value="avis_mr" class="avis-mr">Avis favorable (mineures)</button>
+                        <button type="submit" name="decision" value="avis_mjr" class="avis-mjr">Avis favorable (majeures)</button>
+                        <button type="submit" name="decision" value="refuser" class="refuser">Avis défavorable</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="navigation">
+                {% if index > 0 %}
+                    <a href="?index={{ index|add:"-1" }}">⬅ Précédent</a>
+                {% else %}
+                    <span></span>
+                {% endif %}
+
+                {% if index < total|add:"-1" %}
+                    <a href="?index={{ index|add:"1" }}">Suivant ➡</a>
+                {% endif %}
+            </div>
+
+            {% else %}
+                <p>Aucune thèse en attente de décision.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

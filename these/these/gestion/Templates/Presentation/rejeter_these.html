@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rejeter Thèse</title>
+    <link rel="stylesheet" href="{% static 'css/styler.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h2>Rejeter la Thèse de {{ these.etudiant.nom }} {{ these.etudiant.prenom }}</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="commentaire">Commentaire</label>
+                <textarea name="commentaire" id="commentaire" rows="5"></textarea>
+            </div>
+            <button type="submit" class="btn reject">Rejeter la Thèse</button>
+        </form>
+    </div>
+</body>
+</html>

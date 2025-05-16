@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Soutenances</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="page-container">
+        <!-- Menu de navigation vertical à gauche -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>Gestion Thèses</h2>
+            </div>
+            <nav class="menu">
+                <ul class="nav-menu">
+                    <li><a href="{% url 'accueil_etudiant' %}"><i class="fas fa-home"></i> Accueil</a></li>
+                    <li><a href="{% url 'copie_zero' %}"><i class="fas fa-pencil-alt"></i> Copie 0</a></li>
+                    <li><a href="{% url 'rapport_intermediaire' %}"><i class="fas fa-file-alt"></i> Rapport Intermédiaire</a></li>
+                    <li><a href="{% url 'rapport_final' %}"><i class="fas fa-file"></i> Rapport Final</a></li>
+                    <li><a href="{% url 'profil_etudiant' %}"><i class="fas fa-user"></i> Profil</a></li>
+                    <li><a href="{% url 'historique' %}"><i class="fas fa-scroll"></i> Historique</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Contenu principal à droite -->
+        <main class="main-content">
+            <!-- Horloge -->
+            <div class="clock-container">
+                <div class="clock">
+                    <div id="date"></div>
+                    <div id="time"></div>
+                    <div class="progress-bar"></div>
+                </div>
+            </div>
+
+            <!-- Contenu des soutenances -->
+            <div class="content">
+                <!-- Soutenances en cours -->
+                <div class="card visible">
+                    <div class="card-header accent-1">
+                        <h1><i class="fas fa-calendar-day"></i> Soutenances en cours</h1>
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="soutenances-list">
+                            {% for soutenance in en_cours %}
+                            <li class="soutenance-item highlight">
+                                <div class="soutenance-bubble">
+                                    <div class="soutenance-icon">
+                                        <i class="fas fa-chalkboard-teacher"></i>
+                                    </div>
+                                    <div class="bubble-arrow"></div>
+                                </div>
+                                <div class="soutenance-content">
+                                    <div class="soutenance-header">
+                                        <h3>{{ soutenance.these.titre }}</h3>
+                                        <div class="soutenance-doctorant">
+                                            <i class="fas fa-user-graduate"></i>
+                                            <span>{{ soutenance.these.doctorant.nom }} {{ soutenance.these.doctorant.prenom }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="soutenance-date">
+                                        <i class="fas fa-clock"></i>
+                                        <span>Aujourd'hui - {{ soutenance.heure_debut|time:"H:i" }} à {{ soutenance.heure_fin|time:"H:i" }}</span>
+                                    </div>
+                                    <div class="soutenance-location">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>{{ soutenance.lieu }}</span>
+                                    </div>
+                                    <div class="soutenance-badge">En cours</div>
+                                </div>
+                            </li>
+                            {% empty %}
+                            <li class="empty-list">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Aucune soutenance aujourd'hui.</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Soutenances à venir -->
+                <div class="card visible">
+                    <div class="card-header">
+                        <h1><i class="fas fa-calendar-alt"></i> Soutenances à venir</h1>
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="soutenances-list">
+                            {% for soutenance in a_venir %}
+                            <li class="soutenance-item">
+                                <div class="soutenance-bubble">
+                                    <div class="soutenance-icon">
+                                        <i class="fas fa-hourglass-half"></i>
+                                    </div>
+                                    <div class="bubble-arrow"></div>
+                                </div>
+                                <div class="soutenance-content">
+                                    <div class="soutenance-header">
+                                        <h3>{{ soutenance.these.titre }}</h3>
+                                        <div class="soutenance-doctorant">
+                                            <i class="fas fa-user-graduate"></i>
+                                            <span>{{ soutenance.these.doctorant.nom }} {{ soutenance.these.doctorant.prenom }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="soutenance-date">
+                                        <i class="fas fa-calendar"></i>
+                                        <span>{{ soutenance.date_soutenance }}</span>
+                                    </div>
+                                    <div class="soutenance-location">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>{{ soutenance.lieu }}</span>
+                                    </div>
+                                    <div class="soutenance-badge">À venir</div>
+                                </div>
+                            </li>
+                            {% empty %}
+                            <li class="empty-list">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Aucune soutenance à venir.</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Soutenances passées -->
+                <div class="card visible">
+                    <div class="card-header accent-2">
+                        <h1><i class="fas fa-history"></i> Soutenances passées</h1>
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="soutenances-list">
+                            {% for soutenance in passees %}
+                            <li class="soutenance-item past">
+                                <div class="soutenance-bubble">
+                                    <div class="soutenance-icon">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="bubble-arrow"></div>
+                                </div>
+                                <div class="soutenance-content">
+                                    <div class="soutenance-header">
+                                        <h3>{{ soutenance.these.titre }}</h3>
+                                        <div class="soutenance-doctorant">
+                                            <i class="fas fa-user-graduate"></i>
+                                            <span>{{ soutenance.these.doctorant.nom }} {{ soutenance.these.doctorant.prenom }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="soutenance-date">
+                                        <i class="fas fa-calendar-check"></i>
+                                        <span>{{ soutenance.date_soutenance }}</span>
+                                    </div>
+                                    <div class="soutenance-location">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>{{ soutenance.lieu }}</span>
+                                    </div>
+                                    <div class="soutenance-badge">Terminée</div>
+                                </div>
+                            </li>
+                            {% empty %}
+                            <li class="empty-list">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Aucune soutenance passée.</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Éléments décoratifs -->
+        <div class="wave-top">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+            </svg>
+        </div>
+        
+        <div class="wave-bottom">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+            </svg>
+        </div>
+        
+        <!-- Icônes flottantes -->
+        <div class="floating-icons">
+            <i class="fas fa-graduation-cap icon-float icon-1"></i>
+            <i class="fas fa-book icon-float icon-2"></i>
+            <i class="fas fa-microscope icon-float icon-3"></i>
+            <i class="fas fa-atom icon-float icon-4"></i>
+            <i class="fas fa-award icon-float icon-5"></i>
+            <i class="fas fa-university icon-float icon-6"></i>
+        </div>
+    </div>
+    
+    <script>
+        // Script pour l'horloge
+        function updateClock() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('date').textContent = now.toLocaleDateString('fr-FR', options);
+            
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+            
+            hours = hours < 10 ? '0' + hours : hours;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            
+            document.getElementById('time').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        
+        // Mise à jour de l'horloge toutes les secondes
+        setInterval(updateClock, 1000);
+        updateClock(); // Première mise à jour immédiate
+        
+        // Animation pour l'apparition des cartes
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            
+            // Fonction pour vérifier si un élément est visible dans la fenêtre
+            function isElementInViewport(el) {
+                const rect = el.getBoundingClientRect();
+                return (
+                    rect.top >= 0 &&
+                    rect.left >= 0 &&
+                    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                );
+            }
+            
+            // Fonction pour ajouter la classe 'visible' aux cartes visibles
+            function handleScroll() {
+                cards.forEach(card => {
+                    if (isElementInViewport(card)) {
+                        card.classList.add('visible');
+                    }
+                });
+            }
+            
+            // Déclenchement au scroll et au chargement initial
+            window.addEventListener('scroll', handleScroll);
+            handleScroll();
+        });
+    </script>
+</body>
+</html>

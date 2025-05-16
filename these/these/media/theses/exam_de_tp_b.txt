@@ -1,0 +1,160 @@
+
+
+CREATION DE 5 TABLE
+
+create table Magasin(
+num_m varchar(50)primary key,
+loc varchar(50)
+);
+
+create table Frs(
+num_f varchar(50) primary key,
+nom varchar(50),
+ville varchar(50)
+);
+
+create table client(
+num_c varchar(50) primary key,
+nom varchar(50),
+pays varchar(50),
+ville varchar(50)
+);
+
+create table Article(
+num_a varchar(50) primary key,
+des varchar(50),
+poids decimal(10,2),
+couleur varchar(50),
+prix_achat decimal(10,2),
+num_f varchar(50),
+foreign key(num_f) references Frs (num_f)
+);
+
+create table vente(
+num_c varchar(50),
+num_a varchar(50),
+num_m varchar(50),
+qte decimal(10,3),
+prix_vente decimal(10,2),
+dat date,
+primary key(num_c,num_a,num_m),
+foreign key (num_c) references client(num_c),
+foreign key(num_a) references Article(num_a),
+foreign key(num_m) references Magasin(num_m)
+);
+
+
+INSERTION DE TABLE:
+
+insert into Magasin(num_m,loc) values('M1','Chnenni');
+insert into Magasin(num_m,loc) values('M2','Ain Slam');
+insert into Magasin(num_m,loc) values('M3','Elmanzel');
+
+
+insert into frs(num_f,nom,ville) values ('F1','Tounsi Ali','Sousse');
+insert into frs(num_f,nom,ville) values ('F2','Sfaxi Hedi','Sousse');
+insert into frs(num_f,nom,ville) values ('F3','Gabsi Amin','Gabes');
+
+insert into client(num_c,nom,pays,ville) values ('C1','Jerbi Slim','Tunisie','Gabes');
+insert into client(num_c,nom,pays,ville) values ('C2','Ayed Sami','Tunisie','Gabes');
+insert into client(num_c,nom,pays,ville) values ('C3','Zoya','France','Paris');
+
+
+insert into Article(num_a,des,poids,couleur,prix_achat,num_f) values ('A1','Des1','200','Vert','100,5','F3');
+insert into Article(num_a,des,poids,couleur,prix_achat,num_f) values ('A2','Des2','300','Vert','150,3','F2');
+insert into Article(num_a,des,poids,couleur,prix_achat,num_f) values ('A3','Des3','300','Bleu','200,5','F2');
+insert into Article(num_a,des,poids,couleur,prix_achat,num_f) values ('A4','Des4','500','Bleu','130','F2');
+insert into Article(num_a,des,poids,couleur,prix_achat,num_f) values ('A5','Des5','550','Violet','70','F1');
+
+insert into vente(num_c,num_a,num_m,qte,prix_vente,dat) values('C1','A2','M1','20,250','330','12-10-2010');
+insert into vente(num_c,num_a,num_m,qte,prix_vente,dat) values('C2','A4','M1','100','300','4-2-2008');
+insert into vente(num_c,num_a,num_m,qte,prix_vente,dat) values('C3','A2','M3','500','380,5','25-2-2009');
+insert into vente(num_c,num_a,num_m,qte,prix_vente,dat) values('C1','A3','M2','195,5','330','15-6-2011');
+insert into vente(num_c,num_a,num_m,qte,prix_vente,dat) values('C2','A1','M3','30','150,750','30-8-2012');
+insert into vente(num_c,num_a,num_m,qte,prix_vente,dat) values('C1','A5','M1','750,5','210','14-12-2011');
+insert into vente(num_c,num_a,num_m,qte,prix_vente,dat) values('C1','A1','M1','600,7','200','23-3-2007');
+insert into vente(num_c,num_a,num_m,qte,prix_vente,dat) values('C3','A4','M3','300','430,5','17-6-2009');
+insert into vente(num_c,num_a,num_m,qte,prix_vente,dat) values('C1','A1','M2','20','220','22-3-2008');
+insert into vente(num_c,num_a,num_m,qte,prix_vente,dat) values('C3','A5','M2','100','130,3','3-10-2007');
+
+LA REPONSE DE REQUETE DE 20 QUESTION:
+
+1)
+
+select nom,ville
+from Frs;
+
+2)select Distinct ville
+from Frs;
+
+3)select des,poids
+from Article;
+
+4)select *
+from client
+where num_c='C1';
+
+5)select poids
+from Article
+where num_a='A3';
+
+6)select num_a,des
+from Article
+where couleur='vert';
+
+7)select des
+from Article
+where couleur='vert' and prix_achat>500;
+
+
+8)select num_c,nom
+from client
+where ville='Gabes' and nom LIKE'A%';
+
+9)select *
+from Article
+where des LIKE'%ER' or couleur='vert';
+
+10)select *
+from Article
+where poids between 200 and 300;
+
+11)select *
+from Frs
+where ville='Tunis';
+
+12)select Distinct loc
+from Magasin;
+
+13)select *
+from vente
+order by dat;
+
+14)select nom,pays,ville
+from client
+order by nom;
+
+15)select *
+from Magasin
+where loc LIKE 'E%';
+
+16)select *
+from Frs
+where nom LIKE'%n%';
+
+17)select *
+from client
+where non LIKE'_A%A%';
+
+18)select *
+from vente
+where dat='2007-10-01';
+
+19)select count(*) as nombre_articles
+from Article;
+
+20)select count(*) as nombre_ventes
+from vente;
+
+
+
