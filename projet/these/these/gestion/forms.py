@@ -1,5 +1,5 @@
 from django import forms
-from .models import Commentaire, DemandeInscription
+from .models import Commentaire, DemandeInscription, RapportIntermediaire
 
 # forms.py
 from django import forms
@@ -53,5 +53,8 @@ from .models import  These
 
 class RapportIntermediaireForm(forms.ModelForm):
     class Meta:
-        model = These
-        fields = ['titre', 'rapport_intermediaire']
+        model = RapportIntermediaire
+        fields = ['titre', 'fichier']
+
+        
+        

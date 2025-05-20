@@ -1,0 +1,6 @@
+<form action="{% url 'deconnexion_etudiant' %}" method="post" style="display: inline;">
+    {% csrf_token %}
+    <button type="submit" class="nav-link logout" style="border: none; background: none; color: white; cursor: pointer;">
+        Déconnexion Étudiant
+    </button>
+</form>

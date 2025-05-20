@@ -1,160 +1,720 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Rapporteur - Interface Professeur</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-        }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rapporteur - Évaluation des thèses</title>
+    
+    <!-- Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Font Nunito -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>/* Variables et styles de base */
+:root {
+  --menu-bg: #5D3E8A; /* Violet professionnel pour le menu */
+  --menu-hover: #7A51B5;
+  --menu-active: #4C3272;
+  --menu-text: #ffffff;
+  --form-bg: #ffffff;
+  --primary: #6D47AA; /* Violet principal */
+  --secondary: #E4D7F6; /* Violet très pastel pour fond */
+  --accent1: #F0E6FF; /* Violet pastel clair */
+  --accent2: #D3BEFB; /* Violet pastel moyen */
+  --accent3: #F8F4FF; /* Violet pastel très clair */
+  --accent4: #DFD2F3; /* Violet pastel additionnel */
+  --text: #3A2954;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+}
 
-        .container {
-            display: flex;
-        }
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Nunito', sans-serif;
+}
 
-        .sidebar {
-            width: 220px;
-            background-color: #2f4557;
-            color: white;
-            height: 100vh;
-            padding: 20px;
-        }
+body {
+  background-color: #ffffff; /* Fond blanc */
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-        .sidebar h2 {
-            margin-bottom: 30px;
-        }
+/* ===== MENU VERTICAL ===== */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 260px;
+  background: var(--menu-bg);
+  box-shadow: var(--shadow-lg);
+  z-index: 999;
+  transition: all 0.3s ease;
+}
 
-        .sidebar a {
-            display: block;
-            color: white;
-            text-decoration: none;
-            margin-bottom: 15px;
-            padding: 10px;
-            border-radius: 5px;
-        }
+.sidebar .logo-container {
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
 
-        .sidebar a:hover {
-            background-color: #1f2f3f;
-        }
+.logo-container img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid white;
+  box-shadow: var(--shadow-md);
+}
 
-        .content {
-            flex: 1;
-            padding: 30px;
-        }
+.logo-container .logo-text {
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
+  margin-left: 12px;
+  letter-spacing: 0.5px;
+}
 
-        .thesis-card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
+.sidebar .menu {
+  margin-top: 20px;
+  padding: 0 15px;
+}
 
-        .field {
-            margin-bottom: 15px;
-        }
+.sidebar .menu-item {
+  list-style: none;
+  margin-bottom: 12px;
+}
 
-        .field label {
-            font-weight: bold;
-        }
+.sidebar .menu-link {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  text-decoration: none;
+  color: var(--menu-text);
+  border-radius: var(--radius-md);
+  padding: 0 15px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
 
-        .buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
+.sidebar .menu-link:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.5s ease;
+}
 
-        .buttons button {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            cursor: pointer;
-        }
+.sidebar .menu-link:hover:before {
+  left: 100%;
+}
 
-        .valider { background-color: green; }
-        .avis-sr { background-color: #27ae60; }
-        .avis-mr { background-color: #f39c12; }
-        .avis-mjr { background-color: #e67e22; }
-        .refuser { background-color: red; }
+.sidebar .menu-link:hover {
+  background: var(--menu-hover);
+  transform: translateX(5px);
+}
 
-        .navigation {
-            margin-top: 20px;
-            display: flex;
-            justify-content: space-between;
-        }
+.sidebar .menu-link.active {
+  background: var(--menu-active);
+}
+
+.sidebar .menu-icon {
+  min-width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.sidebar .menu-title {
+  margin-left: 10px;
+  white-space: nowrap;
+}
+
+/* ===== CONTAINER PRINCIPAL ===== */
+.container {
+  margin-left: 260px;
+  padding: 30px;
+  min-height: 100vh;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Vagues décoratives */
+.wave-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  z-index: -1;
+}
+
+.wave-top svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 120px;
+}
+
+.wave-top .shape-fill {
+  fill: #E8D5F9; /* Violet très clair pour les vagues */
+}
+
+.wave-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  z-index: -1;
+}
+
+.wave-bottom svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 120px;
+  transform: rotateY(180deg);
+}
+
+.wave-bottom .shape-fill {
+  fill: #F3E9FF; /* Autre violet très clair pour les vagues */
+  opacity: 0.5;
+}
+
+/* ===== CONTENU PRINCIPAL ===== */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.content h1 {
+  font-size: 28px;
+  color: var(--primary);
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.content h1 span {
+  background: var(--accent2);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 22px;
+}
+
+/* Styles spécifiques à la page rapporteur */
+.thesis-card {
+  background: var(--form-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 25px;
+  margin-bottom: 25px;
+  position: relative;
+  overflow: hidden;
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.thesis-card:before {
+  content: "";
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 150px;
+  height: 150px;
+  background: var(--accent1);
+  border-radius: 50%;
+  opacity: 0.7;
+  z-index: 0;
+}
+
+.thesis-card:after {
+  content: "";
+  position: absolute;
+  bottom: -50px;
+  left: -50px;
+  width: 200px;
+  height: 200px;
+  background: var(--accent3);
+  border-radius: 50%;
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.field {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.field label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--primary);
+  font-size: 16px;
+}
+
+.field div, .field a, .field input {
+  background: white;
+  padding: 12px 15px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--accent4);
+  font-size: 15px;
+  position: relative;
+}
+
+.field a {
+  display: inline-block;
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.field a:hover {
+  background: var(--accent1);
+  transform: translateY(-2px);
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+  margin-top: 30px;
+}
+
+.buttons button {
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.buttons .valider {
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
+}
+
+.buttons .avis-sr {
+  background: linear-gradient(135deg, #2196F3, #0D47A1);
+}
+
+.buttons .avis-mr {
+  background: linear-gradient(135deg, #FF9800, #E65100);
+}
+
+.buttons .avis-mjr {
+  background: linear-gradient(135deg, #F44336, #B71C1C);
+}
+
+.buttons .refuser {
+  background: linear-gradient(135deg, #9C27B0, #4A148C);
+}
+
+.buttons button:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.navigation a {
+  display: inline-block;
+  padding: 12px 25px;
+  background: var(--primary);
+  color: white;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.navigation a:hover {
+  background: var(--menu-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Animation des icônes flottantes */
+.floating-icons {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.icon-float {
+  position: absolute;
+  color: rgba(109, 71, 170, 0.2);
+  font-size: 24px;
+  animation: floating linear infinite;
+}
+
+.icon-1 {
+  top: 15%;
+  left: 10%;
+  font-size: 28px;
+  animation-duration: 15s;
+}
+
+.icon-2 {
+  top: 25%;
+  right: 15%;
+  font-size: 32px;
+  animation-duration: 18s;
+}
+
+.icon-3 {
+  bottom: 20%;
+  left: 20%;
+  font-size: 36px;
+  animation-duration: 20s;
+}
+
+.icon-4 {
+  bottom: 30%;
+  right: 10%;
+  font-size: 26px;
+  animation-duration: 14s;
+}
+
+.icon-5 {
+  top: 45%;
+  left: 30%;
+  font-size: 30px;
+  animation-duration: 16s;
+}
+
+.icon-6 {
+  top: 60%;
+  right: 25%;
+  font-size: 34px;
+  animation-duration: 17s;
+}
+
+@keyframes floating {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(30px, 20px) rotate(90deg);
+  }
+  50% {
+    transform: translate(0, 40px) rotate(180deg);
+  }
+  75% {
+    transform: translate(-30px, 20px) rotate(270deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(360deg);
+  }
+}
+
+/* Personnalisation de la barre de défilement */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--menu-hover);
+}
+
+/* Message pour aucune thèse */
+.content p {
+  background: white;
+  padding: 20px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  font-size: 18px;
+  color: var(--primary);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .sidebar {
+    width: 70px;
+  }
+  
+  .sidebar .logo-text,
+  .sidebar .menu-title {
+    display: none;
+  }
+  
+  .container {
+    margin-left: 70px;
+  }
+  
+  .buttons {
+    flex-direction: column;
+  }
+  
+  .buttons button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+  
+  .thesis-card {
+    padding: 15px;
+  }
+  
+  .content h1 {
+    font-size: 22px;
+  }
+  
+  .content h1 span {
+    font-size: 18px;
+  }
+  
+  .field {
+    margin-bottom: 15px;
+  }
+  
+  .navigation {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .navigation a {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .field {
+    flex-direction: column;
+  }
+  
+  .field label {
+    margin-bottom: 5px;
+  }
+}
+
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="sidebar">
-            <h2>Professeur</h2>
-            <a href="#">Accueil</a>
-            <a href="#">Président</a>
-            <a href="#" style="background-color: #1f2f3f;">Rapporteur</a>
-            <a href="#">Examinateur</a>
-            <a href="#">Rédacteur</a>
-            <a href="#">Profil</a>
-            <a href="#">Historique</a>
-            <a href="#">Déconnexion</a>
+    <!-- Menu vertical -->
+    <nav class="sidebar">
+        <div class="logo-container">
+            <img src="{% static 'images/log.png' %}" alt="Logo Université">
+            <div class="logo-text">Professeur</div>
         </div>
-
-        <div class="content">
-            <h1>Liste des thèses (<span>{{ total }}</span> sans décision)</h1>
-
-            {% if affectation %}
-            <div class="thesis-card">
-                <div class="field">
-                    <label>Titre :</label>
-                    <div>{{ affectation.these.titre }}</div>
+    <ul class="menu">
+        <li class="menu-item">
+            <a href="{% url 'accueil_prof' %}" class="menu-link">
+                <div class="menu-icon">
+                    <i class="fas fa-home"></i>
                 </div>
-
-                <div class="field">
-                    <label>Rapport intermédiaire :</label>
-                    {% if affectation.these.rapport_intermediaire %}
-                          <a href="{{ affectation.these.rapport_intermediaire.url }}" target="_blank">📄 Télécharger</a>
-                    {% else %}
-                        <span>Pas de document</span>
-                    {% endif %}
-                   
-
+                <span class="menu-title">Accueil</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="{% url 'guide_prof' %}" class="menu-link">
+                <div class="menu-icon">
+                    <i class="fas fa-book"></i>
                 </div>
+                <span class="menu-title">Guide</span>
+            </a>
+        </li>
+        
+        <li class="menu-item">
+            <a href="{% url 'page_rapporteur' %}" class="menu-link active">
+                <div class="menu-icon">
+                   <i class="fas fa-pen"></i> 
+                </div>
+                <span class="menu-title">Rapporteur</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="{% url 'profil_prof' %}" class="menu-link">
+                <div class="menu-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <span class="menu-title">Profil</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="{% url 'deconnexion_professeur' %}" class="menu-link">
+                <div class="menu-icon">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+                <span class="menu-title">Déconnexion</span>
+            </a>
+        </li>
+    </ul>
+</nav>
 
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="field">
-                        <label>Grille d'évaluation :</label>
-                        <input type="file" name="grille" required>
-                    </div>
+<!-- Contenu principal -->
+<div class="container">
+    <!-- Vagues décoratives -->
+    <div class="wave-top">
+        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+        </svg>
+    </div>
 
-                    <div class="buttons">
-                        <button type="submit" name="decision" value="valider" class="valider">Valider</button>
-                        <button type="submit" name="decision" value="avis_sr" class="avis-sr">Avis favorable sans réserve</button>
-                        <button type="submit" name="decision" value="avis_mr" class="avis-mr">Avis favorable (mineures)</button>
-                        <button type="submit" name="decision" value="avis_mjr" class="avis-mjr">Avis favorable (majeures)</button>
-                        <button type="submit" name="decision" value="refuser" class="refuser">Avis défavorable</button>
-                    </div>
-                </form>
+    <!-- Icônes flottantes -->
+    <div class="floating-icons">
+        <i class="fas fa-graduation-cap icon-float icon-1"></i>
+        <i class="fas fa-book icon-float icon-2"></i>
+        <i class="fas fa-certificate icon-float icon-3"></i>
+        <i class="fas fa-pen icon-float icon-4"></i>
+        <i class="fas fa-award icon-float icon-5"></i>
+        <i class="fas fa-scroll icon-float icon-6"></i>
+    </div>
+
+    <!-- Contenu de la page -->
+    <div class="content">
+        <h1>Liste des thèses (<span>{{ total }}</span> sans décision)</h1>
+        
+        {% if affectation %}
+        <div class="thesis-card">
+            <div class="field">
+                <label>Titre :</label>
+                <div>{{ affectation.these.titre }}</div>
             </div>
-
-            <div class="navigation">
-                {% if index > 0 %}
-                    <a href="?index={{ index|add:"-1" }}">⬅ Précédent</a>
+            
+            <div class="field">
+                <label>Rapport intermédiaire :</label>
+                {% if affectation.these.rapports_intermediaires.all %}
+                    {% with premier_rapport=affectation.these.rapports_intermediaires.all|first %}
+                        <a href="{{ premier_rapport.fichier.url }}" target="_blank">
+                            <i class="fas fa-file-pdf"></i> Télécharger le rapport
+                        </a>
+                    {% endwith %}
                 {% else %}
-                    <span></span>
-                {% endif %}
-
-                {% if index < total|add:"-1" %}
-                    <a href="?index={{ index|add:"1" }}">Suivant ➡</a>
+                    <div>Pas de document disponible</div>
                 {% endif %}
             </div>
-
+            
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="field">
+                    <label>Grille d'évaluation :</label>
+                    <input type="file" name="grille" required>
+                </div>
+                
+                <div class="buttons">
+                    <button type="submit" name="decision" value="valider" class="valider">
+                        <i class="fas fa-check"></i> Valider
+                    </button>
+                    <button type="submit" name="decision" value="avis_sr" class="avis-sr">
+                        <i class="fas fa-thumbs-up"></i> Avis favorable sans réserve
+                    </button>
+                    <button type="submit" name="decision" value="avis_mr" class="avis-mr">
+                        <i class="fas fa-exclamation-circle"></i> Avis favorable (mineures)
+                    </button>
+                    <button type="submit" name="decision" value="avis_mjr" class="avis-mjr">
+                        <i class="fas fa-exclamation-triangle"></i> Avis favorable (majeures)
+                    </button>
+                    <button type="submit" name="decision" value="refuser" class="refuser">
+                        <i class="fas fa-times"></i> Avis défavorable
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="navigation">
+            {% if index > 0 %}
+                <a href="?index={{ index|add:"-1" }}">
+                    <i class="fas fa-chevron-left"></i> Précédent
+                </a>
             {% else %}
-                <p>Aucune thèse en attente de décision.</p>
+                <span></span>
+            {% endif %}
+            
+            {% if index < total|add:"-1" %}
+                <a href="?index={{ index|add:"1" }}">
+                    Suivant <i class="fas fa-chevron-right"></i>
+                </a>
             {% endif %}
         </div>
+        
+        {% else %}
+            <p>
+                <i class="fas fa-info-circle"></i>
+                Aucune thèse en attente de décision.
+            </p>
+        {% endif %}
     </div>
+
+    <!-- Vague bas de page -->
+    <div class="wave-bottom">
+        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" class="shape-fill"></path>
+        </svg>
+    </div>
+</div>
+
+<!-- Script pour les animations -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Fonction pour afficher les éléments progressivement
+        function revealElements() {
+            const elements = document.querySelectorAll('.thesis-card');
+            elements.forEach(element => {
+                element.classList.add('visible');
+            });
+        }
+        
+        // Attendre un court délai avant de lancer l'animation
+        setTimeout(revealElements, 300);
+    });
+</script>
 </body>
 </html>

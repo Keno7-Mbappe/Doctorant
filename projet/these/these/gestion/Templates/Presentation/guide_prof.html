@@ -1,0 +1,954 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide du Professeur - Procédure de Thèse</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+    :root {
+  --menu-bg: #5D3E8A; /* Violet professionnel pour le menu */
+  --menu-hover: #7A51B5;
+  --menu-active: #4C3272;
+  --menu-text: #ffffff;
+  --form-bg: #ffffff;
+  --primary: #6D47AA; /* Violet principal */
+  --secondary: #F3E9FF; /* Violet très pastel pour fond */
+  --text-primary: #4A6FA5; /* Bleu pastel pour les écritures */
+  --text-secondary: #3A2954; /* Texte foncé */
+  --accent-pink: #FFB2EF; /* Rose pastel */
+  --accent-pink-dark: #FF80E5; /* Rose pastel foncé */
+  --accent-red: #FFB2B2; /* Rouge pastel */
+  --accent-red-dark: #FF8080; /* Rouge pastel foncé */
+  --accent-orange: #FFD2B2; /* Orange pastel */
+  --accent-green: #80D25B; /* Vert pour la progression */
+  --accent-green-light: #AFEAA0; /* Vert clair pour la progression */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Nunito', sans-serif;
+}
+
+body {
+  background-color: #ffffff;
+  color: var(--text-secondary);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== MENU VERTICAL ===== */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 260px;
+  background: var(--menu-bg);
+  box-shadow: var(--shadow-lg);
+  z-index: 999;
+  transition: all 0.3s ease;
+}
+
+.sidebar .logo-container {
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.logo-container img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid white;
+  box-shadow: var(--shadow-md);
+}
+
+.logo-container .logo-text {
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
+  margin-left: 12px;
+  letter-spacing: 0.5px;
+}
+
+.sidebar .menu {
+  margin-top: 20px;
+  padding: 0 15px;
+}
+
+.sidebar .menu-item {
+  list-style: none;
+  margin-bottom: 12px;
+}
+
+.sidebar .menu-link {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  text-decoration: none;
+  color: var(--menu-text);
+  border-radius: var(--radius-md);
+  padding: 0 15px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar .menu-link:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.5s ease;
+}
+
+.sidebar .menu-link:hover:before {
+  left: 100%;
+}
+
+.sidebar .menu-link:hover {
+  background: var(--menu-hover);
+  transform: translateX(5px);
+}
+
+.sidebar .menu-link.active {
+  background: var(--menu-active);
+}
+
+.sidebar .menu-icon {
+  min-width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.sidebar .menu-title {
+  margin-left: 10px;
+  white-space: nowrap;
+}
+
+/* ===== CONTAINER PRINCIPAL ===== */
+.container {
+  margin-left: 260px;
+  padding: 30px;
+  min-height: 100vh;
+  position: relative;
+  transition: all 0.3s ease;
+  background-color: #FBFAFF;
+}
+
+/* En-tête du guide */
+header {
+  margin-bottom: 30px;
+}
+
+header h1 {
+  color: var(--primary);
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+  position: relative;
+  padding-bottom: 15px;
+}
+
+header h1:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-pink), var(--accent-pink-dark));
+  border-radius: 3px;
+}
+
+/* ===== TIMELINE ===== */
+.timeline {
+  position: relative;
+  margin: 40px 0;
+  padding: 20px 0;
+}
+
+.timeline-track {
+  position: relative;
+  height: 4px;
+  background-color: #E6E6E6;
+  border-radius: 2px;
+  margin: 0 30px;
+}
+
+.timeline-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-green-light), var(--accent-green));
+  border-radius: 2px;
+  transition: width 0.5s ease;
+  width: 20%; /* Valeur par défaut, sera modifiée par JavaScript */
+}
+
+.timeline-points {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 30px;
+  position: relative;
+  top: -14px;
+}
+
+.timeline-point {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #E6E6E6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  border: 3px solid white;
+  box-shadow: var(--shadow-sm);
+}
+
+.timeline-point i {
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.timeline-point:hover {
+  transform: scale(1.1);
+}
+
+.timeline-point.active {
+  background: linear-gradient(135deg, var(--accent-pink), var(--accent-pink-dark));
+  color: white;
+  box-shadow: 0 0 10px rgba(255, 128, 229, 0.6);
+}
+
+.timeline-point.completed {
+  background: linear-gradient(135deg, var(--accent-green-light), var(--accent-green));
+  color: white;
+}
+
+.timeline-labels {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 30px 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.timeline-label {
+  text-align: center;
+  flex: 1;
+  padding: 0 5px;
+  transition: all 0.3s ease;
+}
+
+.timeline-label.active {
+  color: var(--accent-pink-dark);
+  font-weight: 700;
+}
+
+.timeline-label.completed {
+  color: var(--accent-green);
+}
+
+/* ===== CONTENT SECTION ===== */
+.content-section {
+  background-color: var(--secondary);
+  border-radius: var(--radius-lg);
+  padding: 30px;
+  box-shadow: var(--shadow-md);
+  min-height: 500px;
+  margin-top: 30px;
+}
+
+.step-content {
+  display: none;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s ease;
+}
+
+.step-content.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  animation: fadeInUp 0.5s ease;
+}
+
+.step-content.completed {
+  display: none;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid rgba(109, 71, 170, 0.2);
+}
+
+.step-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+  background: linear-gradient(135deg, var(--accent-pink), var(--accent-pink-dark));
+  color: white;
+  font-size: 24px;
+  box-shadow: var(--shadow-md);
+}
+
+.step-content.completed .step-icon {
+  background: linear-gradient(135deg, var(--accent-green-light), var(--accent-green));
+}
+
+.step-info h2 {
+  color: var(--text-primary);
+  font-size: 24px;
+  margin-bottom: 5px;
+}
+
+.step-info p {
+  color: var(--text-secondary);
+  opacity: 0.8;
+  font-size: 16px;
+}
+
+.step-description {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.step-description p {
+  margin-bottom: 15px;
+}
+
+.step-description ol, .step-description ul {
+  margin-bottom: 15px;
+  padding-left: 20px;
+}
+
+.step-description li {
+  margin-bottom: 8px;
+}
+
+.step-description ul li {
+  list-style-type: none;
+  position: relative;
+  padding-left: 25px;
+}
+
+.step-description ul li:before {
+  content: "\f00c";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  position: absolute;
+  left: 0;
+  color: var(--accent-green);
+}
+
+.step-description ol li {
+  padding-left: 10px;
+}
+
+.alert-info {
+  background-color: #EFF8FF;
+  border-left: 4px solid #4A6FA5;
+  padding: 15px;
+  border-radius: var(--radius-sm);
+  margin: 20px 0;
+  display: flex;
+  align-items: flex-start;
+}
+
+.alert-info i {
+  font-size: 20px;
+  color: #4A6FA5;
+  margin-right: 15px;
+  margin-top: 2px;
+}
+
+/* Vagues décoratives */
+.wave-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  z-index: -1;
+}
+
+.wave-bottom svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 120px;
+  transform: rotateY(180deg);
+}
+
+.wave-bottom .shape-fill {
+  fill: #F3E9FF;
+  opacity: 0.5;
+}
+
+/* ===== ANIMATION DES ICÔNES FLOTTANTES ===== */
+.floating-icons {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.icon-float {
+  position: absolute;
+  color: rgba(242, 180, 222, 0.2); /* Rose pâle pour les icônes */
+  font-size: 24px;
+  animation: floating linear infinite;
+}
+
+.icon-1 {
+  top: 15%;
+  left: 10%;
+  font-size: 28px;
+  animation-duration: 15s;
+}
+
+.icon-2 {
+  top: 25%;
+  right: 15%;
+  font-size: 32px;
+  animation-duration: 18s;
+}
+
+.icon-3 {
+  bottom: 20%;
+  left: 20%;
+  font-size: 36px;
+  animation-duration: 20s;
+}
+
+.icon-4 {
+  bottom: 30%;
+  right: 10%;
+  font-size: 26px;
+  animation-duration: 14s;
+}
+
+.icon-5 {
+  top: 45%;
+  left: 30%;
+  font-size: 30px;
+  animation-duration: 16s;
+}
+
+.icon-6 {
+  top: 60%;
+  right: 25%;
+  font-size: 34px;
+  animation-duration: 17s;
+}
+
+@keyframes floating {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(30px, 20px) rotate(90deg);
+  }
+  50% {
+    transform: translate(0, 40px) rotate(180deg);
+  }
+  75% {
+    transform: translate(-30px, 20px) rotate(270deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(360deg);
+  }
+}
+
+/* Personnalisation des icônes dans le contenu */
+.step-description ul li strong i {
+  color: var(--accent-green);
+  margin-right: 5px;
+}
+
+/* Personnalisation de la barre de défilement */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-pink);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-pink-dark);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .sidebar {
+    width: 70px;
+  }
+  
+  .sidebar .logo-text,
+  .sidebar .menu-title {
+    display: none;
+  }
+  
+  .container {
+    margin-left: 70px;
+  }
+  
+  .step-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .step-icon {
+    margin-right: 0;
+    margin-bottom: 15px;
+  }
+  
+  .timeline-label {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+  
+  .content-section {
+    padding: 20px;
+  }
+  
+  header h1 {
+    font-size: 24px;
+  }
+  
+  .step-info h2 {
+    font-size: 20px;
+  }
+  
+  .timeline-points {
+    margin: 0 10px;
+  }
+  
+  .timeline-labels {
+    margin: 10px 10px 0;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .timeline-track {
+    margin: 0 15px;
+  }
+  
+  .timeline-points {
+    margin: 0 15px;
+  }
+  
+  .timeline-labels {
+    margin: 10px 10px 0;
+    font-size: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .timeline-label {
+    flex: 0 0 50%;
+    margin-bottom: 10px;
+  }
+  
+  .step-info h2 {
+    font-size: 18px;
+  }
+  
+  .alert-info {
+    flex-direction: column;
+  }
+  
+  .alert-info i {
+    margin-bottom: 10px;
+  }
+}
+    </style>
+</head>
+<body>
+    <!-- Menu vertical -->
+    <nav class="sidebar">
+        <div class="logo-container">
+            <img src="{% static 'images/log.png' %}"  alt="Logo Université">
+            <div class="logo-text">Professeur</div>
+        </div>
+
+        <ul class="menu">
+            <li class="menu-item">
+                <a href="{% url 'accueil_prof' %}"class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <span class="menu-title">Accueil</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'guide_prof' %}" class="menu-link active">
+                    <div class="menu-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <span class="menu-title">Guide</span>
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="{% url 'page_rapporteur' %}" class="menu-link">
+                    <div class="menu-icon">
+                       <i class="fas fa-pen"></i> 
+                    </div>
+                    <span class="menu-title">Rapporteur</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'profil_prof' %}" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="menu-title">Profil</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'deconnexion_professeur' %}" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <span class="menu-title">Déconnexion</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="container">
+        <header>
+            <h1>Guide du Professeur - Procédure de Thèse</h1>
+        </header>
+        
+        <!-- Timeline -->
+        <div class="timeline">
+            <div class="timeline-track">
+                <div class="timeline-progress" id="timeline-progress"></div>
+            </div>
+            <div class="timeline-points">
+                <div class="timeline-point completed" data-step="1">
+                    <i class="fas fa-sign-in-alt"></i>
+                </div>
+                <div class="timeline-point active" data-step="2">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="timeline-point" data-step="3">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div class="timeline-point" data-step="4">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="timeline-point" data-step="5">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+            </div>
+            <div class="timeline-labels">
+                <div class="timeline-label completed">Connexion</div>
+                <div class="timeline-label active">Rôle Rapporteur</div>
+                <div class="timeline-label">Évaluation</div>
+                <div class="timeline-label">Décision</div>
+                <div class="timeline-label">Président de Jury</div>
+            </div>
+        </div>
+        
+        <!-- Content Section -->
+        <div class="content-section">
+            <!-- Step 1 -->
+            <div class="step-content active" id="step-1">
+                <div class="step-header">
+                    <div class="step-icon">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </div>
+                    <div class="step-info">
+                        <h2>Étape 1: Connexion</h2>
+                        <p>Accès à votre espace professeur</p>
+                    </div>
+                </div>
+                <div class="step-description">
+                    <p>Bienvenue dans le système de gestion des thèses. Votre parcours commence par votre connexion à la plateforme.</p>
+                    <p>Si vous avez pu accéder à votre espace, alors :</p>
+                    <ol>
+                        <li>Bravo vous avez accompli la première étape, continuez</li>
+                    </ol>
+                    <div class="alert-info">
+                        <i class="fas fa-info-circle"></i> Si vous rencontrez des difficultés pour vous connecter, contactez l'administrateur.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 2 -->
+            <div class="step-content active" id="step-2">
+                <div class="step-header">
+                    <div class="step-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="step-info">
+                        <h2>Étape 2: Attribution du Rôle de Rapporteur</h2>
+                        <p>Consultation des projets de thèse assignés</p>
+                    </div>
+                </div>
+                <div class="step-description">
+                    <p>Après votre connexion, vous pouvez consulter les projets de thèse pour lesquels vous avez été désigné comme rapporteur.</p>
+                    <p>Comment accéder à la liste des rapports :</p>
+                    <ol>
+                        <li>Cliquez sur l'onglet "Rapporteur" dans le menu principal</li>
+                        <li>Consultez la liste des thèses pour lesquelles vous avez été assigné</li>
+                        <li>Sélectionnez un projet pour accéder aux détails et documents associés</li>
+                    </ol>
+                    <p>Pour chaque projet, vous pourrez voir :</p>
+                    <ul>
+                        <li>Le titre de la thèse</li>
+                        <li>La dépôt du rapport intermédiaire</li>
+                        
+                    </ul>
+                    <div class="alert-info">
+                        <i class="fas fa-lightbulb"></i> Conseil : Organisez votre temps pour examiner chaque projet avec attention. Vous pouvez télécharger les documents pour les consulter hors ligne.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 3 -->
+            <div class="step-content" id="step-3">
+                <div class="step-header">
+                    <div class="step-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div class="step-info">
+                        <h2>Étape 3: Évaluation des Travaux</h2>
+                        <p>Analyse approfondie et grille d'évaluation</p>
+                    </div>
+                </div>
+                <div class="step-description">
+                    <p>En tant que rapporteur, vous devez procéder à une évaluation approfondie des travaux du doctorant et remplir la grille d'évaluation associée.</p>
+                    <p>Le processus d'évaluation comprend :</p>
+                    <ol>
+                        <li>Téléchargement et lecture du rapport du doctorant</li>
+                        <li>Analyse critique du contenu scientifique</li>
+                        <li>Évaluation de la méthodologie utilisée</li>
+                        <li>Vérification de la pertinence des résultats</li>
+                        <li>Téleverser la grille d'évaluation </li>
+                    </ol>
+                    
+                    <div class="alert-info">
+                        <i class="fas fa-info-circle"></i> Important : Vos commentaires doivent être constructifs et précis pour aider le doctorant à améliorer son travail.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 4 -->
+            <div class="step-content" id="step-4">
+                <div class="step-header">
+                    <div class="step-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="step-info">
+                        <h2>Étape 4: Prise de Décision</h2>
+                        <p>Statuer sur le travail du doctorant</p>
+                    </div>
+                </div>
+                <div class="step-description">
+                    <p>Après avoir complété la grille d'évaluation, vous devez prendre une décision concernant le travail du doctorant. Cette décision orientera la suite du processus.</p>
+                    <p>Vous devez choisir parmi les 5 options suivantes :</p>
+                    <ul>
+                        <li><strong><i class="fas fa-check-circle"></i> Valider</strong> : Le travail est excellent et peut être présenté tel quel</li>
+                        <li><strong><i class="fas fa-check"></i> Avis favorables avec réserves mineures</strong> : Le travail est de bonne qualité mais nécessite quelques ajustements mineurs</li>
+                        <li><strong><i class="fas fa-sync-alt"></i>  Avis favorables avec réserves majeures</strong> : Le travail comporte des lacunes importantes qui doivent être comblées avant la soutenance</li>
+                        <li><strong><i class="fas fa-pause-circle"></i>  Avis défavorables </strong> : Le travail n'est pas suffisamment abouti et nécessite une période supplémentaire de recherche</li>
+                        <li><strong><i class="fas fa-times-circle"></i> Rejet</strong> : Le travail présente des défauts fondamentaux qui ne peuvent être corrigés dans le cadre actuel</li>
+                    </ul>
+                    
+                    <div class="alert-info">
+                        <i class="fas fa-lightbulb"></i> Conseil : Assurez-vous que votre décision est cohérente avec les commentaires et notes attribués dans la grille d'évaluation.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 5 -->
+            <div class="step-content" id="step-5">
+                <div class="step-header">
+                    <div class="step-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="step-info">
+                        <h2>Étape 5: Rôle de Président de Jury</h2>
+                        <p>Responsabilités lors de la soutenance</p>
+                    </div>
+                </div>
+                <div class="step-description">
+                    <p>Si vous avez été désigné président du jury, vous avez des responsabilités supplémentaires lors de la soutenance de thèse.</p>
+                    <p>Vos tâches en tant que président du jury :</p>
+                    <ol>
+                        <li>Présider la séance de soutenance</li>
+                        <li>Introduire le candidat et le sujet de la thèse</li>
+                        <li>Gérer le temps et les échanges durant la soutenance</li>
+                        <li>Coordonner les questions des membres du jury</li>
+                        <li>Organiser la délibération</li>
+                        <li>Annoncer la décision finale</li>
+                    </ol>
+                    <p>Après la soutenance, vous devez finaliser le processus :</p>
+                    <ol>
+                        <li>Connectez-vous à la plateforme</li>
+                        <li>Accédez à la section "Président de Jury"</li>
+                        <li>Sélectionnez le projet concerné</li>
+                        <li>Complétez le formulaire d'évaluation finale</li>
+                        <li>Donnez votre avis sur la thèse</li>
+                        <li>Validez la réussite du doctorant en cliquant sur "Confirmer la réussite"</li>
+    
+                    </ol>
+                    <div class="alert-info">
+                        <i class="fas fa-info-circle"></i> Important : La validation de la réussite doit être effectuée dans les 48 heures suivant la soutenance pour permettre au doctorant de finaliser son parcours.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vagues décoratives bas de page -->
+    <div class="wave-bottom">
+        <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+        </svg>
+    </div>
+
+    <!-- Icônes flottantes décoratives -->
+    <div class="floating-icons">
+        <div class="icon-float icon-1"><i class="fas fa-graduation-cap"></i></div>
+        <div class="icon-float icon-2"><i class="fas fa-book"></i></div>
+        <div class="icon-float icon-3"><i class="fas fa-university"></i></div>
+        <div class="icon-float icon-4"><i class="fas fa-pencil-alt"></i></div>
+        <div class="icon-float icon-5"><i class="fas fa-award"></i></div>
+        <div class="icon-float icon-6"><i class="fas fa-scroll"></i></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const timelinePoints = document.querySelectorAll('.timeline-point');
+            const stepContents = document.querySelectorAll('.step-content');
+            const timelineProgress = document.getElementById('timeline-progress');
+            
+            // Function to update progress bar
+            function updateProgressBar(stepNumber) {
+                // Convert stepNumber to integer
+                const step = parseInt(stepNumber);
+                
+                // Calculate progress percentage
+                // (step - 1) because we're 0-indexed for calculations, and there are 5 steps total
+                const progressPercentage = ((step - 1) / (timelinePoints.length - 1)) * 100;
+                
+                // Update progress bar width
+                timelineProgress.style.width = progressPercentage + '%';
+            }
+            
+            // Function to show step content
+            function showStep(stepNumber) {
+                // Hide all step contents
+                stepContents.forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Show selected step content
+                document.getElementById('step-' + stepNumber).classList.add('active');
+                
+                // Update timeline points
+                timelinePoints.forEach(point => {
+                    point.classList.remove('active');
+                    
+                    // Mark completed steps
+                    if (parseInt(point.getAttribute('data-step')) < parseInt(stepNumber)) {
+                        point.classList.add('completed');
+                        point.classList.remove('active');
+                    } else if (point.getAttribute('data-step') === stepNumber) {
+                        point.classList.add('active');
+                        point.classList.remove('completed');
+                    } else {
+                        point.classList.remove('active');
+                        point.classList.remove('completed');
+                    }
+                });
+                
+                // Update progress bar
+                updateProgressBar(stepNumber);
+            }
+            
+            // Add click event to timeline points
+            timelinePoints.forEach(point => {
+                point.addEventListener('click', function() {
+                    const stepNumber = this.getAttribute('data-step');
+                    showStep(stepNumber);
+                });
+            });
+            
+            // Initialize with step 2 (since that's the active step in the HTML)
+            showStep('2');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,463 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - Comité des Thèses</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS pour la page de profil */
+
+:root {
+  --menu-bg: #3b8a5e; /* Vert foncé élégant pour le menu */
+  --menu-hover: #4da278;
+  --menu-active: #2e6e4a;
+  --menu-text: #ffffff;
+  --form-bg: #ffffff;
+  --primary: #5cbc8b; /* Vert principal */
+  --secondary: #d7f2e3; /* Vert très pastel pour fond */
+  --accent1: #e0f8e0; /* Vert pastel clair */
+  --accent2: #b5e8ca; /* Vert pastel moyen */
+  --accent3: #f0ffed; /* Vert pastel très clair */
+  --accent4: #c9e6d4; /* Vert pastel additionnel */
+  --text: #2c5b45;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Nunito', sans-serif;
+}
+
+body {
+  background-color: #f5faf8; /* Fond subtil vert pâle adouci */
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== MENU VERTICAL ===== */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 260px;
+  background: var(--menu-bg);
+  box-shadow: var(--shadow-lg);
+  z-index: 999;
+  transition: all 0.3s ease;
+}
+
+.sidebar .logo-container {
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.logo-container img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid white;
+  box-shadow: var(--shadow-md);
+}
+
+.logo-container .logo-text {
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
+  margin-left: 12px;
+  letter-spacing: 0.5px;
+}
+
+.sidebar .menu {
+  margin-top: 20px;
+  padding: 0 15px;
+}
+
+.sidebar .menu-item {
+  list-style: none;
+  margin-bottom: 12px;
+}
+
+.sidebar .menu-link {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  text-decoration: none;
+  color: var(--menu-text);
+  border-radius: var(--radius-md);
+  padding: 0 15px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar .menu-link:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.5s ease;
+}
+
+.sidebar .menu-link:hover:before {
+  left: 100%;
+}
+
+.sidebar .menu-link:hover {
+  background: var(--menu-hover);
+  transform: translateX(5px);
+}
+
+.sidebar .menu-link.active {
+  background: var(--menu-active);
+}
+
+.sidebar .menu-icon {
+  min-width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.sidebar .menu-title {
+  margin-left: 10px;
+  white-space: nowrap;
+}
+
+/* ===== CONTAINER PRINCIPAL ===== */
+.container {
+  margin-left: 260px;
+  padding: 30px;
+  min-height: 100vh;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Personnalisation de la page de profil */
+.content {
+  max-width: 900px;
+  margin: 30px auto;
+}
+
+.card {
+  background: var(--form-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.card.visible {
+  opacity: 1;
+  transform: translateY(0);
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.card-header {
+  padding: 20px 25px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-header h1 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 0;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+}
+
+.card-header h1 i {
+  margin-right: 10px;
+}
+
+.card-header.profile {
+  background: linear-gradient(135deg, #a8d8c0, #7dc6a5); /* Dégradé vert doux */
+}
+
+.card-header .progress-bar {
+  height: 4px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.5), rgba(255,255,255,0.2));
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  animation: progressAnimation 3s infinite;
+}
+
+@keyframes progressAnimation {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.card-body {
+  padding: 25px;
+}
+
+/* Style spécifique au profil */
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.profile-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 15px;
+  background-color: var(--accent3);
+  border-radius: var(--radius-md);
+  transition: all 0.3s ease;
+}
+
+.profile-item:hover {
+  transform: translateX(5px);
+  box-shadow: var(--shadow-sm);
+}
+
+.profile-item i {
+  font-size: 24px;
+  color: var(--primary);
+  margin-right: 15px;
+  width: 30px;
+  text-align: center;
+}
+
+.profile-label {
+  font-size: 14px;
+  color: #6a9683;
+  margin-bottom: 5px;
+}
+
+.profile-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .sidebar {
+    width: 70px;
+  }
+  
+  .sidebar .logo-text,
+  .sidebar .menu-title {
+    display: none;
+  }
+  
+  .container {
+    margin-left: 70px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+  
+  .profile-item {
+    flex-direction: column;
+  }
+  
+  .profile-item i {
+    margin-bottom: 10px;
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .card-header h1 {
+    font-size: 18px;
+  }
+  
+  .profile-value {
+    font-size: 16px;
+  }
+}
+
+/* Personnalisation de la barre de défilement */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--menu-hover);
+}
+    </style>
+</head>
+<body>
+    <!-- Menu vertical -->
+    <nav class="sidebar">
+        <div class="logo-container">
+            <img src="{% static 'images/log.png' %}" alt="Logo Université">
+            <div class="logo-text">Comité</div>
+        </div>
+
+        <ul class="menu">
+            <li class="menu-item">
+                <a href="{% url 'accueil_comite' %}" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <span class="menu-title">Accueil</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'guide_comite' %}" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <span class="menu-title">Guide</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'tableau_theses_comite' %}" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-copy"></i>
+                    </div>
+                    <span class="menu-title">Copie0</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'rapport_inter' %}" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <span class="menu-title">Rapport intermédiaire</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'composition_jury' %}" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <span class="menu-title">Composition</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'profil_comite' %}" class="menu-link active">
+                    <div class="menu-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="menu-title">Profil</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'deconnexion_comite' %}" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <span class="menu-title">Déconnexion</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Container principal -->
+    <div class="container">
+        <!-- Contenu principal -->
+        <div class="content">
+            <!-- Carte de profil -->
+            <div class="card visible">
+                <div class="card-header profile">
+                    <h1><i class="fas fa-id-card"></i> Mon Profil</h1>
+                    <div class="progress-bar"></div>
+                </div>
+                <div class="card-body">
+                    <div class="profile-info">
+                        <div class="profile-item">
+                            <i class="fas fa-user"></i>
+                            <div>
+                                <div class="profile-label">Nom complet</div>
+                                <div class="profile-value">{{ utilisateur.nom }}</div>
+                            </div>
+                        </div>
+                        <div class="profile-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <div class="profile-label">Email</div>
+                                <div class="profile-value">{{ utilisateur.email }}</div>
+                            </div>
+                        </div>
+                        <div class="profile-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <div>
+                                <div class="profile-label">Promotion</div>
+                                <div class="profile-value">{{ utilisateur.promotion }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animation pour rendre la carte visible au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.classList.add('visible');
+            });
+        });
+    </script>
+</body>
+</html>

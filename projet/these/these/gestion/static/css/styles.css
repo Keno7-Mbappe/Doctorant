@@ -1,123 +1,223 @@
-/* Structure principale */
+/* --- Global Styles --- */
 body {
-  display: flex;
-  min-height: 100vh;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
+    font-family: 'Nunito', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7fc; /* Couleur de fond claire */
+    color: #333;
 }
 
-/* Menu vertical */
-.navbar {
-  width: 240px;
-  background-color: var(--menu-bg);
-  padding: 20px;
-  position: fixed;
-  height: 100vh;
-  left: 0;
-  top: 0;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-  z-index: 100;
+h1, h2, h3 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
 }
 
-.navbar .logo {
-  color: #ffffff;
-  font-size: 1.8em;
-  text-align: center;
-  margin-bottom: 30px;
-  font-weight: bold;
+a {
+    text-decoration: none;
+    color: inherit;
 }
 
-.nav-menu {
-  list-style-type: none;
-  padding: 0;
-}
-
-.nav-menu li {
-  margin: 15px 0;
-}
-
-.nav-menu a {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-  color: #ffffff;
-  padding: 12px 20px;
-  border-radius: 8px;
-  font-size: 1.1em;
-  transition: background-color 0.3s, transform 0.3s;
-}
-
-.nav-menu a:hover {
-  background-color: var(--menu-hover);
-  transform: translateX(10px);
-}
-
-.nav-menu a i {
-  font-size: 1.3em;
-}
-
-/* Contenu des soutenances */
-.content {
-  flex: 1;
-  margin-left: 240px;
-  padding: 20px 30px 40px;
-  width: calc(100% - 240px);
-  position: relative;
-}
-
-/* Adaptation responsive */
-@media (max-width: 992px) {
-  .navbar {
-    width: 200px;
-  }
-  
-  .content {
-    margin-left: 200px;
-    width: calc(100% - 200px);
-  }
-}
-
-@media (max-width: 768px) {
-  body {
-    flex-direction: column;
-  }
-  
-  .navbar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    padding: 15px;
-  }
-  
-  .content {
-    margin-left: 0;
-    width: 100%;
+/* --- Sidebar (Menu Latéral) --- */
+.sidebar {
+    background-color: #2E3A8C; /* Bleu foncé */
+    color: #fff;
+    width: 240px;
+    height: 100vh;
     padding: 20px;
-  }
-  
-  .clock-container {
-    position: static;
-    margin-bottom: 20px;
-  }
-  
-  .clock {
-    position: static;
-    transform: none;
-  }
+    position: fixed;
+    top: 0;
+    left: 0;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
 }
 
-/* Ajustements pour la zone des soutenances */
-.card {
-  margin-top: 70px;
+.sidebar .logo h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.sidebar .menu {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar .menu li {
+    margin: 15px 0;
+}
+
+.sidebar .menu a {
+    color: #fff;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    transition: all 0.3s ease;
+}
+
+.sidebar .menu a:hover {
+    background-color: #1c2769; /* Bleu plus foncé au survol */
+    padding-left: 15px;
+}
+
+.sidebar .menu a i {
+    margin-right: 10px;
+}
+
+/* --- Main Content --- */
+.main-content {
+    margin-left: 240px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
 }
 
 .clock-container {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
 }
+
+.clock {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+}
+
+.clock #date {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #555;
+}
+
+.clock #time {
+    font-size: 36px;
+    color: #4caf50; /* Vert clair */
+}
+
+/* --- Cards (Soutenances) --- */
+.card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.card-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* --- Soutenances List --- */
+.soutenances-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.soutenance-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease;
+}
+
+.soutenance-item:hover {
+    background-color: #e0e0e0;
+}
+
+.soutenance-bubble {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #4caf50; /* Vert clair */
+    border-radius: 50%;
+    padding: 10px;
+    width: 40px;
+    height: 40px;
+}
+
+.soutenance-icon {
+    color: #fff;
+    font-size: 18px;
+}
+
+/* --- Animations d'apparition --- */
+.card.visible {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.card.visible.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- Wave Design --- */
+.wave-top, .wave-bottom {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+}
+
+.wave-top {
+    top: 0;
+}
+
+.wave-fill {
+    fill: #fff;
+}
+
+/* --- Floating Icons --- */
+.floating-icons {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    z-index: 999;
+}
+
+.floating-icons i {
+    font-size: 32px;
+    color: #4caf50;
+    transition: transform 0.3s ease;
+}
+
+.floating-icons i:hover {
+    transform: scale(1.2);
+}
+
+
+
+

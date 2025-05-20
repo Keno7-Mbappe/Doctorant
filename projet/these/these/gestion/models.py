@@ -88,9 +88,8 @@ class These(models.Model):
     date_soutenance = models.DateField(null=True, blank=True)
 
     # === Nouveau : Rapport intermédiaire ===
-    rapport_intermediaire = models.FileField(
-        upload_to='rapport_intermediaires/', blank=True, null=True
-    )
+   
+   
     grille_evaluation = models.FileField(
         upload_to='grilles_evaluation/', blank=True, null=True
     )
@@ -165,9 +164,9 @@ class HistoriqueAction(models.Model):
 
 
 class RapportIntermediaire(models.Model):
-    these = models.ForeignKey(These, on_delete=models.CASCADE, related_name='rapports_intermediaires')
-    titre = models.CharField(max_length=255)
     fichier = models.FileField(upload_to='rapports_intermediaires/')
+    these = models.ForeignKey(These, related_name='rapports_intermediaires', on_delete=models.CASCADE)
+    titre = models.CharField(max_length=255)
     date_soumission = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

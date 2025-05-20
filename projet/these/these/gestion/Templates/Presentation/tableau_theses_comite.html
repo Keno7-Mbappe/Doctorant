@@ -7,623 +7,713 @@
     <title>Copie 0 - Liste des Thèses</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
+   <style>
     :root {
-  --menu-bg: #5b7a9d;
-  --menu-hover: #7590ad;
-  --menu-active: #496785;
-  --menu-text: #ffffff;
-  --form-bg: #ffffff;
-  --primary: #8ab6ff;
-  --secondary: #c4e0ff;
-  --accent1: #ffd6e0;
-  --accent2: #c5f8c7;
-  --accent3: #fff4bd;
-  --accent4: #e0c2ff;
-  --text: #4a5568;
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
+    --menu-bg: #3b8a5e; /* Vert foncé élégant pour le menu */
+    --menu-hover: #4da278;
+    --menu-active: #2e6e4a;
+    --menu-text: #ffffff;
+    --form-bg: #ffffff;
+    --primary: #5cbc8b; /* Vert principal */
+    --secondary: #ffffff; /* Fond blanc */
+    --accent1: #e0f8e0; /* Vert pastel clair */
+    --accent2: #b5e8ca; /* Vert pastel moyen */
+    --accent3: #f0ffed; /* Vert pastel très clair */
+    --accent4: #c9e6d4; /* Vert pastel additionnel */
+    --text: #2c5b45;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    
+    /* Statut couleurs */
+    --status-approved: #3b8a5e;
+    --status-pending: #e9b949;
+    --status-rejected: #e05252;
+    
+    /* Autres couleurs pour le tableau */
+    --table-header: #f8f5ee; /* Beige pâle */
+    --table-row-even: #e8f5e9; /* Vert très pâle */
+    --table-row-odd: #ffffff; /* Blanc */
+    --table-hover: #f0f9f0; /* Vert pastel très léger */
+    --table-border: #c9e6d4;
+    
+    /* Nouvelles couleurs */
+    --wave-top-color: #b5e8ca; /* Vert pastel pour les vagues */
+    --wave-bottom-color: #f7d794; /* Jaune pastel pour les vagues */
+    --waiting-count: #e05252; /* Rouge pour le nombre d'attente */
+    --button-search: #ff9e9e; /* Rouge pastel pour le bouton recherche */
+    --button-download: #e05252; /* Rouge pour télécharger */
+    --button-verify: #ff9e9e; /* Rouge pastel pour vérifier */
 }
 
 /* Reset */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Nunito', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Nunito', sans-serif;
 }
 
 body {
-  background-color: #f0f5ff;
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
+    background-color: var(--secondary);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
+/* Layout principal */
 .layout {
-  display: flex;
+    display: flex;
+    min-height: 100vh;
 }
 
-/* ===== MENU VERTICAL ===== */
+/* Sidebar */
 .sidebar {
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 260px;
-  background: var(--menu-bg);
-  box-shadow: var(--shadow-lg);
-  z-index: 999;
-  transition: all 0.3s ease;
+    width: 260px;
+    background-color: var(--menu-bg);
+    color: var(--menu-text);
+    padding: 1.5rem 0;
+    z-index: 10;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
 }
 
-.sidebar .logo-container {
-  height: 110px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+.logo-container {
+    display: flex;
+    align-items: center;
+    padding: 0 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .logo-container img {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid white;
-  box-shadow: var(--shadow-md);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 1rem;
+    object-fit: cover;
 }
 
-.logo-container .logo-text {
-  color: white;
-  font-size: 20px;
-  font-weight: 700;
-  margin-left: 12px;
-  letter-spacing: 0.5px;
+.logo-text {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: white;
 }
 
-.sidebar .menu {
-  margin-top: 20px;
-  padding: 0 15px;
-  list-style: none;
+.menu {
+    list-style: none;
+    padding: 0;
 }
 
-.sidebar .menu-item {
-  list-style: none;
-  margin-bottom: 12px;
+.menu-item {
+    margin-bottom: 0.5rem;
 }
 
-.sidebar .menu-link {
-  display: flex;
-  align-items: center;
-  height: 56px;
-  text-decoration: none;
-  color: var(--menu-text);
-  border-radius: var(--radius-md);
-  padding: 0 15px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+.menu-link {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1.5rem;
+    text-decoration: none;
+    color: var(--menu-text);
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
 }
 
-.sidebar .menu-link:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: all 0.5s ease;
+.menu-link:hover {
+    background-color: var(--menu-hover);
+    border-left-color: #ffffff;
 }
 
-.sidebar .menu-link:hover:before {
-  left: 100%;
+.menu-link.active {
+    background-color: var(--menu-active);
+    border-left-color: var(--accent2);
+    font-weight: 600;
 }
 
-.sidebar .menu-link:hover {
-  background: var(--menu-hover);
-  transform: translateX(5px);
+.menu-icon {
+    margin-right: 1rem;
+    width: 18px;
+    text-align: center;
 }
 
-.sidebar .menu-link.active {
-  background: var(--menu-active);
-}
-
-.sidebar .menu-icon {
-  min-width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-}
-
-.sidebar .menu-title {
-  margin-left: 10px;
-  white-space: nowrap;
-}
-
-/* ===== CONTAINER PRINCIPAL ===== */
+/* Contenu principal */
 .container {
-  margin-left: 260px;
-  padding: 30px;
-  min-height: 100vh;
-  position: relative;
-  transition: all 0.3s ease;
-  width: calc(100% - 260px);
+    flex: 1;
+    padding: 2rem;
+    margin-left: 260px;
+    position: relative;
+    overflow: hidden;
 }
 
-/* Vagues décoratives */
+/* Effet de vague */
+.wave-top, .wave-bottom {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    z-index: -1;
+}
+
 .wave-top {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
-  z-index: -1;
-}
-
-.wave-top svg {
-  position: relative;
-  display: block;
-  width: calc(100% + 1.3px);
-  height: 120px;
-}
-
-.wave-top .shape-fill {
-  fill: var(--secondary);
+    top: 0;
+    height: 120px;
 }
 
 .wave-bottom {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
-  z-index: -1;
+    bottom: 0;
+    height: 120px;
+    transform: rotate(180deg);
 }
 
-.wave-bottom svg {
-  position: relative;
-  display: block;
-  width: calc(100% + 1.3px);
-  height: 120px;
-  transform: rotateY(180deg);
+.wave-top svg, .wave-bottom svg {
+    position: relative;
+    display: block;
+    width: calc(100% + 1.3px);
+    height: 120px;
+}
+
+.wave-top .shape-fill {
+    fill: var(--wave-top-color);
 }
 
 .wave-bottom .shape-fill {
-  fill: var(--accent1);
-  opacity: 0.5;
+    fill: var(--wave-bottom-color);
 }
 
-/* ===== CARD ET FORMULAIRES ===== */
+/* Carte principale */
 .card {
-  background: var(--form-bg);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-  overflow: hidden;
-  margin: 50px 0;
-  position: relative;
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-  100% { transform: translateY(0px); }
+    background: var(--form-bg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    margin-bottom: 2rem;
+    overflow: hidden;
 }
 
 .card-header {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  padding: 25px;
-  color: white;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
+    padding: 1.5rem;
+    background-color: var(--accent4);
+    color: var(--text);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .card-header h2 {
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 5px;
-  display: flex;
-  align-items: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
 }
 
 .card-header h2 i {
-  margin-right: 12px;
-  font-size: 32px;
+    margin-right: 0.5rem;
+    color: var(--primary);
 }
 
-.card-header .badge {
-  background-color: rgba(255, 255, 255, 0.3);
-  border-radius: 20px;
-  padding: 5px 10px;
-  font-size: 16px;
-  margin-left: 10px;
-}
-
-.card-header:after {
-  content: "";
-  position: absolute;
-  bottom: -30px;
-  right: -30px;
-  width: 150px;
-  height: 150px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-}
-
-.card-header:before {
-  content: "";
-  position: absolute;
-  top: -30px;
-  left: -30px;
-  width: 100px;
-  height: 100px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  z-index: 0;
+/* Badge modifié pour afficher le nombre d'attente en rouge */
+.badge {
+    background-color: var(--waiting-count);
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
 }
 
 .card-body {
-  padding: 35px;
+    padding: 1.5rem;
 }
 
-/* Formulaire */
-.form-row {
-  display: flex;
-  gap: 20px;
-  margin-bottom: 20px;
+/* Barre de recherche stylisée */
+.search-bar {
+    display: flex;
+    margin-bottom: 1.5rem;
 }
 
 .form-group {
-  position: relative;
-  flex: 1;
-  margin-bottom: 25px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
-  color: var(--text);
-  font-size: 15px;
-  transition: all 0.3s ease;
-}
-
-.form-group label i {
-  margin-right: 6px;
-  color: var(--primary);
+    flex: 1;
 }
 
 .form-control {
-  width: 100%;
-  padding: 15px;
-  border: 2px solid #e2e8f0;
-  border-radius: var(--radius-md);
-  font-size: 16px;
-  transition: all 0.3s ease;
-  background-color: #f8fafc;
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid var(--accent2);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
 }
 
 .form-control:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(138, 182, 255, 0.3);
-  transform: translateY(-3px);
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(92, 188, 139, 0.2);
 }
 
-textarea.form-control {
-  min-height: 110px;
-  resize: vertical;
-}
-
-/* Boutons */
+/* Bouton recherche modifié en rouge pastel */
 .btn {
-  display: inline-block;
-  background: linear-gradient(45deg, var(--primary), var(--secondary));
-  color: white;
-  border: none;
-  padding: 15px 30px;
-  border-radius: var(--radius-md);
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: var(--shadow-md);
-  position: relative;
-  overflow: hidden;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.btn:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-lg);
-}
-
-.btn:active {
-  transform: translateY(1px);
-}
-
-.btn:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transform: translateX(-100%);
-}
-
-.btn:hover:before {
-  animation: shine 1.5s;
-}
-
-@keyframes shine {
-  100% { transform: translateX(100%); }
+    background-color: var(--button-search);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn i {
-  margin-right: 8px;
+    margin-right: 0.5rem;
 }
 
-/* Table */
+.btn:hover {
+    background-color: #ff8b8b;
+}
+
+/* Tableau */
 .table-responsive {
-  overflow-x: auto;
-  margin-bottom: 30px;
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
 }
 
 .table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-}
-
-.table th, 
-.table td {
-  padding: 15px;
-  text-align: left;
-  border-bottom: 1px solid #e2e8f0;
+    width: 100%;
+    border-collapse: collapse;
 }
 
 .table th {
-  background-color: var(--secondary);
-  color: var(--text);
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 14px;
-  letter-spacing: 1px;
+    background-color: var(--table-header);
+    color: var(--text);
+    font-weight: 700;
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 2px solid var(--table-border);
+}
+
+.table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--table-border);
+    vertical-align: top;
+}
+
+.table tr:nth-child(even) {
+    background-color: var(--table-row-even);
+}
+
+.table tr:nth-child(odd) {
+    background-color: var(--table-row-odd);
 }
 
 .table tr:hover {
-  background-color: #f8fafc;
-}
-
-.table tr:last-child td {
-  border-bottom: none;
+    background-color: var(--table-hover);
 }
 
 /* Statuts */
 .status {
-  display: inline-block;
-  padding: 5px 10px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.status i {
+    margin-right: 0.5rem;
 }
 
 .status.approved {
-  background-color: var(--accent2);
-  color: #2f855a;
-}
-
-.status.rejected {
-  background-color: var(--accent1);
-  color: #c53030;
+    background-color: rgba(59, 138, 94, 0.1);
+    color: var(--status-approved);
 }
 
 .status.pending {
-  background-color: var(--accent3);
-  color: #b7791f;
+    background-color: rgba(233, 185, 73, 0.1);
+    color: var(--status-pending);
+}
+
+.status.rejected {
+    background-color: rgba(224, 82, 82, 0.1);
+    color: var(--status-rejected);
 }
 
 /* Boutons d'action */
-.btn-download, .btn-action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 12px;
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  font-weight: 600;
-  margin-right: 5px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  border: none;
-}
-
-.btn-download {
-  background-color: var(--secondary);
-  color: var(--text);
+.action-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .btn-action {
-  background-color: var(--primary);
-  color: white;
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.btn-action i {
+    margin-right: 0.5rem;
 }
 
 .btn-approve {
-  background-color: var(--accent2);
-  color: #2f855a;
+    background-color: rgba(59, 138, 94, 0.1);
+    color: var(--status-approved);
+    transition: background-color 0.3s ease;
+}
+
+.btn-approve:hover {
+    background-color: rgba(59, 138, 94, 0.2);
 }
 
 .btn-reject {
-  background-color: var(--accent1);
-  color: #c53030;
+    background-color: rgba(224, 82, 82, 0.1);
+    color: var(--status-rejected);
+    transition: background-color 0.3s ease;
 }
 
-.btn-download:hover, .btn-action:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+.btn-reject:hover {
+    background-color: rgba(224, 82, 82, 0.2);
 }
 
-.text-warning {
-  color: #ed8936;
-  font-weight: 600;
+/* Bouton télécharger modifié en rouge */
+.btn-download {
+    background-color: rgba(224, 82, 82, 0.1);
+    color: var(--button-download);
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: background-color 0.3s ease;
 }
 
-/* Action group */
-.action-group {
-  display: flex;
-  gap: 5px;
+.btn-download:hover {
+    background-color: rgba(224, 82, 82, 0.2);
+}
+
+.btn-download i {
+    margin-right: 0.5rem;
+}
+
+/* Bouton vérifier en rouge pastel */
+.btn-verify {
+    background-color: rgba(255, 158, 158, 0.1);
+    color: var(--button-verify);
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.btn-verify:hover {
+    background-color: rgba(255, 158, 158, 0.2);
+}
+
+.btn-verify i {
+    margin-right: 0.5rem;
 }
 
 /* Pagination */
 .pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-}
-
-.pagination a, .pagination .current {
-  margin: 0 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1.5rem;
 }
 
 .btn-page {
-  padding: 8px 15px;
-  background-color: var(--primary);
-  color: white;
-  border-radius: var(--radius-sm);
-  text-decoration: none;
-  font-weight: 600;
-  transition: all 0.2s ease;
+    background-color: var(--accent2);
+    color: var(--text);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    text-decoration: none;
+    margin: 0 0.5rem;
+    transition: background-color 0.3s ease;
 }
 
 .btn-page:hover {
-  background-color: var(--menu-hover);
-  transform: translateY(-2px);
+    background-color: var(--primary);
+    color: white;
 }
 
-.pagination .current {
-  padding: 8px 15px;
-  background-color: #f0f5ff;
-  border: 1px solid var(--primary);
-  color: var(--text);
-  border-radius: var(--radius-sm);
-  font-weight: 600;
+.current {
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    color: var(--text);
 }
 
 /* Modal */
 .modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
-  backdrop-filter: blur(4px);
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal-content {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  padding: 30px;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-  width: 90%;
-  max-width: 450px;
-  animation: zoomIn 0.3s;
-}
-
-@keyframes zoomIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-.modal h3 {
-  font-size: 22px;
-  margin-bottom: 20px;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-}
-
-.modal h3 i {
-  margin-right: 10px;
-  color: var(--primary);
+    background-color: var(--form-bg);
+    margin: 10% auto;
+    padding: 2rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    max-width: 600px;
+    position: relative;
+    animation: modalFadeIn 0.3s;
 }
 
 .close {
-  position: absolute;
-  top: 15px;
-  right: 20px;
-  font-size: 24px;
-  cursor: pointer;
-  color: var(--text);
-  transition: all 0.2s ease;
+    position: absolute;
+    right: 1.5rem;
+    top: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text);
+    cursor: pointer;
+    transition: color 0.3s ease;
 }
 
 .close:hover {
-  color: var(--primary);
-  transform: scale(1.2);
+    color: var(--primary);
 }
 
-/* Alert */
-.alert {
-  padding: 15px;
-  border-radius: var(--radius-md);
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
+.modal h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+    display: flex;
+    align-items: center;
 }
 
-.alert-success {
-  background: rgba(197, 248, 199, 0.5);
-  border-left: 4px solid #48bb78;
+.modal h3 i {
+    margin-right: 0.5rem;
+    color: var(--primary);
 }
-</style>
+
+textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.close-btn {
+    background-color: var(--accent2);
+    color: var(--text);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.close-btn:hover {
+    background-color: var(--accent4);
+}
+
+/* Animation */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Popup de plagiat et overlay */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+}
+
+#popup-plagiat {
+    display: none;
+}
+
+#popup-plagiat.show, .overlay.show {
+    display: block;
+}
+
+.text-warning {
+    color: var(--status-pending);
+    display: flex;
+    align-items: center;
+}
+
+.text-warning i {
+    margin-right: 0.5rem;
+}
+
+/* Animation d'entrée */
+.fade-in {
+    animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Styles responsifs */
+@media (max-width: 992px) {
+    .sidebar {
+        width: 220px;
+    }
+    
+    .container {
+        margin-left: 220px;
+    }
+}
+
+@media (max-width: 768px) {
+    .layout {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding: 1rem 0;
+    }
+    
+    .container {
+        margin-left: 0;
+        padding: 1rem;
+    }
+    
+    .logo-container {
+        margin-bottom: 1rem;
+    }
+    
+    .menu-link {
+        padding: 0.6rem 1.5rem;
+    }
+    
+    .wave-top, .wave-bottom {
+        height: 60px;
+    }
+    
+    .wave-top svg, .wave-bottom svg {
+        height: 60px;
+    }
+    
+    .card-header {
+        padding: 1rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .search-bar {
+        flex-direction: column;
+    }
+    
+    .search-bar button {
+        margin-left: 0 !important;
+        margin-top: 0.5rem;
+        width: 100% !important;
+    }
+    
+    .table th, .table td {
+        padding: 0.75rem;
+    }
+    
+    .action-group {
+        flex-direction: row;
+    }
+    
+    .modal-content {
+        width: 90%;
+        margin: 20% auto;
+        padding: 1.5rem;
+    }
+}
+
+/* Modifier la couleur des alertes */
+#contenu-plagiat div {
+    border-radius: var(--radius-md) !important;
+}
+
+/* Ajuster les couleurs pour le popup plagiat */
+#contenu-plagiat div[style*="color: #e74c3c"] {
+    color: var(--status-rejected) !important;
+    background-color: rgba(224, 82, 82, 0.1) !important;
+}
+
+#contenu-plagiat div[style*="color: #2ecc71"] {
+    color: var(--status-approved) !important;
+    background-color: rgba(59, 138, 94, 0.1) !important;
+}
+   </style> 
+
 </head>
 <body>
 <div class="layout">
     <!-- Sidebar améliorée -->
     <aside class="sidebar">
         <div class="logo-container">
-            <img src="{% static 'images/logo.png' %}" alt="Logo" onerror="this.src='https://via.placeholder.com/60'; this.onerror=null;">
-            <div class="logo-text">🎓 ThèseManager</div>
+            <img src="{% static 'images/log.png' %}" alt="Logo" onerror="this.src='https://via.placeholder.com/60'; this.onerror=null;">
+            <div class="logo-text">Comité</div>
         </div>
         <ul class="menu">
             <li class="menu-item">
-                <a href="{% url 'liste_soutenances' %}" class="menu-link">
+                <a href="{% url 'accueil_comite' %}" class="menu-link">
                     <span class="menu-icon"><i class="fas fa-home"></i></span>
                     <span class="menu-title">Accueil</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'guide_comite' %}" class="menu-link active">
+                    <span class="menu-icon"><i class="fas fa-book"></i></span>
+                    <span class="menu-title">Guide</span>
                 </a>
             </li>
             <li class="menu-item">
@@ -640,18 +730,18 @@ textarea.form-control {
             </li>
             <li class="menu-item">
                 <a href="#" class="menu-link">
-                    <span class="menu-icon"><i class="fas fa-star"></i></span>
-                    <span class="menu-title">Évaluation</span>
-                </a>
-            </li>
-            <li class="menu-item">
-                <a href="#" class="menu-link">
                     <span class="menu-icon"><i class="fas fa-users"></i></span>
                     <span class="menu-title">Composition jury</span>
                 </a>
             </li>
             <li class="menu-item">
-                <a href="#" class="menu-link">
+                <a href="{% url 'profil_comite' %}" class="menu-link">
+                    <span class="menu-icon"><i class="fas fa-user"></i></span>
+                    <span class="menu-title">Profil</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'deconnexion_comite' %}" class="menu-link">
                     <span class="menu-icon"><i class="fas fa-sign-out-alt"></i></span>
                     <span class="menu-title">Déconnexion</span>
                 </a>
@@ -686,6 +776,8 @@ textarea.form-control {
                     <table class="table">
                         <thead>
                             <tr>
+                                <th>ID Doctorant</th>
+                                <th>Nom du Doctorant</th>
                                 <th>Titre</th>
                                 <th>Domaine</th>
                                 <th>Description</th>
@@ -698,45 +790,54 @@ textarea.form-control {
                         <tbody>
                             {% for these in page_obj %}
                             <tr>
+                                <td>{{ these.utilisateur.id }}</td>
+                                <td>{{ these.utilisateur.nom }}</td>
                                 <td>{{ these.titre }}</td>
                                 <td>{{ these.domaine }}</td>
                                 <td>{{ these.description }}</td>
                                 <td>{{ these.motivation }}</td>
                                 <td>
-                                    {% if these.fichier %}
-                                        <a href="{{ these.fichier.url }}" class="btn-download" target="_blank">
-                                            <i class="fas fa-file-download"></i> Télécharger
-                                        </a>
-                                        <button onclick="verifierPlagiat({{ these.id }})" class="btn-action">
-                                            <i class="fas fa-search"></i> Vérifier
-                                        </button>
-                                    {% else %}
-                                        <span class="text-warning"><i class="fas fa-exclamation-triangle"></i> Pas de fichier</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if these.statut == 'Approuvé' %}
-                                        <span class="status approved"><i class="fas fa-check-circle"></i> Approuvée</span>
-                                    {% elif these.statut == 'Rejeté' %}
-                                        <span class="status rejected"><i class="fas fa-times-circle"></i> Rejetée</span>
-                                    {% else %}
-                                        <span class="status pending"><i class="fas fa-clock"></i> En Attente</span>
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {% if these.statut == 'En attente' %}
-                                    <div class="action-group">
-                                        <a href="{% url 'approuver_these' these.id %}" class="btn-action btn-approve">
-                                            <i class="fas fa-check"></i> Approuver
-                                        </a>
-                                        <button class="btn-action btn-reject" onclick="ouvrirModalRejet({{ these.id }})">
-                                            <i class="fas fa-times"></i> Rejeter
-                                        </button>
-                                    </div>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
+    {% if these.fichier %}
+    <div style="display: flex; flex-direction: column; gap: 5px;">
+        <a href="{{ these.fichier.url }}" class="btn-download" target="_blank">
+            <i class="fas fa-file-download"></i> Télécharger
+        </a>
+        <button onclick="verifierPlagiat({{ these.id }})" class="btn-action">
+            <i class="fas fa-search"></i> Vérifier
+        </button>
+        
+    </div>
+    {% else %}
+        <span class="text-warning"><i class="fas fa-exclamation-triangle"></i> Pas de fichier</span>
+    {% endif %}
+</td>
+
+                                <td> 
+                                      {% if these.statut == 'Approuvée' %}
+    <span class="status approved"><i class="fas fa-check-circle"></i> Approuvée</span>
+{% elif these.statut == 'Rejetée' %}
+    <span class="status rejected"><i class="fas fa-times-circle"></i> Rejetée</span>
+{% else %}
+    <span class="status pending"><i class="fas fa-clock"></i> En Attente</span>
+{% endif %}
+
+                                      </td>
+                                       <td>
+                                         {% if these.statut == 'En attente' %}
+                                          <div class="action-group">
+                                                    <form method="post" action="{% url 'decision_these' these.id %}" style="display: inline;">
+                                                     {% csrf_token %}
+                                                        <button type="submit" name="decision" value="approuve" class="btn-action btn-approve">
+                <i class="fas fa-check"></i> Approuver
+            </button>
+            <button type="submit" name="decision" value="rejete" class="btn-action btn-reject">
+                <i class="fas fa-times"></i> Rejeter
+            </button>
+        </form>
+    </div>
+    {% endif %}
+</td>
+{% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -766,104 +867,92 @@ textarea.form-control {
     </main>
 </div>
 
-<!-- Popup Rejet -->
-<div id="modal-rejet" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="fermerModalRejet()">&times;</span>
-        <h3><i class="fas fa-times-circle"></i> Rejeter la thèse</h3>
-        <form method="post" id="form-rejet">
-            {% csrf_token %}
-            <input type="hidden" name="these_id" id="these-id">
-            <div class="form-group">
-                <label for="commentaire"><i class="fas fa-comment"></i> Commentaire de rejet :</label>
-                <textarea name="commentaire" id="commentaire" class="form-control" required></textarea>
-            </div>
-            <button type="button" class="btn" onclick="envoyerRejet()">
-                <i class="fas fa-paper-plane"></i> Envoyer
-            </button>
-        </form>
-    </div>
-</div>
 
 <!-- Popup Plagiat -->
+<div id="overlay" class="overlay"></div>
 <div id="popup-plagiat" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="fermerPopupPlagiat()">&times;</span>
-        <h3><i class="fas fa-search"></i> Résultat de la vérification</h3>
-        <div id="contenu-plagiat" class="alert"></div>
-        <button type="button" class="close-btn" onclick="fermerPopupPlagiat()">
-            <i class="fas fa-times"></i> Fermer
-        </button>
-    </div>
+  <div class="modal-content">
+    <span class="close" onclick="fermerPopupPlagiat()">&times;</span>
+    <h3><i class="fas fa-search"></i> Résultat de la vérification</h3>
+    <div id="contenu-plagiat" class="alert"></div>
+    <button type="button" class="close-btn" onclick="fermerPopupPlagiat()">
+      <i class="fas fa-times"></i> Fermer
+    </button>
+  </div>
 </div>
 
+
+<!-- N'oublie pas un overlay, sinon l'effet ne fonctionne pas bien -->
+
+
 <script>
-function verifierPlagiat(theseId) {
-    fetch(/etudiants/verifier_plagiat/${theseId}/)
+
+    window.verifierPlagiat = function(theseId) {
+    fetch(`/verifier_plagiat/${theseId}/`)
         .then(response => response.json())
         .then(data => {
             const contenu = document.getElementById("contenu-plagiat");
-            contenu.className = "alert";
             if (data.plagiat) {
-                contenu.classList.add("alert-error");
-                contenu.innerHTML = `
-                    <div class="icon"><i class="fas fa-exclamation-triangle"></i></div>
-                    <div class="message-text">🚨 Plagiat détecté ! Cette thèse ressemble à : <strong>${data.titre}</strong></div>
-                `;
+                contenu.innerHTML = `<div style="color: #e74c3c; padding: 15px; background-color: rgba(231, 76, 60, 0.1); border-radius: 8px;"><i class="fas fa-times-circle"></i> Plagiat détecté ! Cette thèse ressemble à : <strong>${data.titre}</strong></div>`;
             } else {
-                contenu.classList.add("alert-success");
-                contenu.innerHTML = `
-                    <div class="icon"><i class="fas fa-check-circle"></i></div>
-                    <div class="message-text">✅ Aucune similarité détectée !</div>
-                `;
+                contenu.innerHTML = `<div style="color: #2ecc71; padding: 15px; background-color: rgba(46, 204, 113, 0.1); border-radius: 8px;"><i class="fas fa-check-circle"></i> Aucune similarité détectée !</div>`;
             }
-            document.getElementById("popup-plagiat").style.display = "block";
+            document.getElementById("popup-plagiat").classList.add("show");
+            document.getElementById("overlay").classList.add("show");
         })
         .catch(error => {
-            const contenu = document.getElementById("contenu-plagiat");
-            contenu.className = "alert alert-error";
-            contenu.innerHTML = `
-                <div class="icon"><i class="fas fa-exclamation-circle"></i></div>
-                <div class="message-text">❌ Erreur lors de la vérification.</div>
-            `;
-            document.getElementById("popup-plagiat").style.display = "block";
+            document.getElementById("contenu-plagiat").innerHTML = `<div style="color: #e74c3c; padding: 15px; background-color: rgba(231, 76, 60, 0.1); border-radius: 8px;"><i class="fas fa-exclamation-circle"></i> Erreur lors de la vérification.</div>`;
+            document.getElementById("popup-plagiat").classList.add("show");
+            document.getElementById("overlay").classList.add("show");
         });
-}
+};
 
-function fermerPopupPlagiat() {
-    document.getElementById("popup-plagiat").style.display = "none";
-}
+window.fermerPopupPlagiat = function() {
+    document.getElementById("popup-plagiat").classList.remove("show");
+    document.getElementById("overlay").classList.remove("show");
+};
 
-function ouvrirModalRejet(theseId) {
+// Même chose pour les autres fonctions :
+window.ouvrirModalRejet = function(theseId) {
     document.getElementById("these-id").value = theseId;
     document.getElementById("modal-rejet").style.display = "block";
-}
+};
 
-function fermerModalRejet() {
+window.fermerModalRejet = function() {
     document.getElementById("modal-rejet").style.display = "none";
-}
+};
 
-function envoyerRejet() {
+window.envoyerRejet = function() {
     const theseId = document.getElementById('these-id').value;
     const commentaire = document.getElementById('commentaire').value;
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-    fetch(/etudiants/rejeter_these/${theseId}/, {
+    fetch(`/rejeter_these/${theseId}/`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            'X-CSRFToken': csrfToken
         },
         body: new URLSearchParams({ commentaire: commentaire })
     })
     .then(response => {
         if (response.ok) {
             fermerModalRejet();
-            location.reload();  // Recharge pour voir les changements
+            location.reload();
         } else {
-            alert("Erreur lors de l'envoi du commentaire.");
+            return response.text().then(text => {
+                console.error("Réponse serveur :", text);
+                alert("❌ Erreur lors de l'envoi du commentaire.");
+            });
         }
+    })
+    .catch(error => {
+        console.error("Erreur réseau :", error);
+        alert("⚠️ Une erreur est survenue lors de la communication avec le serveur.");
     });
-}
+};
+
+
 </script>
 </body>
 </html>

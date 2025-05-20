@@ -111,13 +111,13 @@ def connexion(request):
                 # Redirection selon le rôle
                 if user.role == 'doctorant':
                     print("Redirection vers profil_et_these")
-                    return redirect('accueil_etudiant')
+                    return redirect('liste_soutenances')
                 elif user.role == 'professeur':
                     print("Redirection vers page_rapporteur")
                     return redirect('page_rapporteur')
                 elif user.role == 'comite':
                     print("Redirection vers tableau_theses_comite")
-                    return redirect('tableau_theses_comite')
+                    return redirect('accueil_comite')
                 else:
                     print("Rôle non reconnu")
                     messages.error(request, "Rôle non reconnu.")
@@ -151,7 +151,7 @@ def accueil_etudiant(request):
         messages.warning(request, "⚠️ Pour des raisons de sécurité, pensez à changer votre mot de passe régulièrement.\nVous pouvez le faire via le menu latéral dans 'Changer le mot de passe'.")
 
     historique = HistoriqueAction.objects.all().order_by('-date_action')[:10]
-    return render(request, 'Presentation/accueil_etudiant.html', {'historique': historique})
+    return render(request, 'Presentation/liste_soutenances.html', {'historique': historique})
 
 from django.contrib.auth.decorators import login_required
 
@@ -159,10 +159,14 @@ from django.contrib.auth.decorators import login_required
 def profil_etudiant(request):
     return render(request, 'presentation/profil.html')
 
+from django.shortcuts import render
+
+def guide_etudiant(request):
+    return render(request, 'Presentation/guide_etudiant.html')
 
 
 from django.contrib.auth.decorators import login_required
-from .models import These, Notification, HistoriqueAction
+from .models import These, Utilisateur  # Assure-toi que Utilisateur est bien importé
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
@@ -172,6 +176,9 @@ def copie_zero(request):
 
     # Vérifie s'il a déjà soumis une thèse
     these_deja_soumise = These.objects.filter(utilisateur=utilisateur).exists()
+
+    # Liste des encadreurs (professeurs)
+    encadreurs = Utilisateur.objects.filter(role='professeur')
 
     if request.method == 'POST':
         if these_deja_soumise:
@@ -183,11 +190,18 @@ def copie_zero(request):
         domaine = request.POST.get('domaine')
         description = request.POST.get('description')
         motivation = request.POST.get('motivation')
-        encadreur = request.POST.get('encadreur')
+        encadreur_id = request.POST.get('encadreur')
         fichier = request.FILES.get('fichier', None)
 
+        # Vérifie que l'encadreur est valide
+        try:
+            encadreur = Utilisateur.objects.get(id=encadreur_id, role='professeur')
+        except Utilisateur.DoesNotExist:
+            messages.error(request, "Encadreur invalide.")
+            return redirect('copie_zero')
+
         # Création de la thèse
-        these = These.objects.create(
+        These.objects.create(
             utilisateur=utilisateur,
             titre=titre,
             domaine=domaine,
@@ -197,69 +211,73 @@ def copie_zero(request):
             fichier=fichier
         )
 
-        # Historique de l'action
-        HistoriqueAction.objects.create(
-            utilisateur=utilisateur,
-            action=f"Soumission de la thèse '{titre}'"
-        )
+        messages.success(request, f"Votre thèse '{titre}' a bien été soumise sous la direction de {encadreur.nom}.")
 
-        # Création de la notification
-        Notification.objects.create(
-            utilisateur=utilisateur,
-            titre="Soumission réussie",
-            message=f"Votre thèse '{titre}' a bien été soumise pour évaluation.",
-            
-        )
-        
-
-        messages.success(request, "Votre thèse a bien été soumise !")
         return redirect('copie_zero')
 
-    # Envoi de l'info au template pour désactiver le bouton
     return render(request, 'presentation/copie_zero.html', {
-        'these_deja_soumise': these_deja_soumise
+        'these_deja_soumise': these_deja_soumise,
+        'encadreurs': encadreurs
     })
 
+
 from django.contrib import messages
-from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .models import These, RapportIntermediaire, Notification
 
 @login_required
 def rapport_intermediaire(request):
-    these = These.objects.filter(utilisateur=request.user).first()
+    these = These.objects.filter(
+        utilisateur=request.user,
+        statut='Approuvée',
+        approuve_par_comite=True
+    ).first()
 
+    print("These trouvée:", these)
+    if these:
+        print("statut:", these.statut)
+        print("approuve_par_comite:", these.approuve_par_comite)
+    else:
+        print("Aucune thèse approuvée par comité trouvée")
+
+    rapport_existant = None
     is_approved = False
-    if these and these.statut == 'Approuvé' and these.approuve_par_comite:
+    can_submit = False
+
+    if these:
         is_approved = True
+        rapport_existant = RapportIntermediaire.objects.filter(these=these).first()
+        can_submit = rapport_existant is None  # Soumission possible uniquement si pas de rapport déjà soumis
 
-    if request.method == 'POST' and is_approved:
-        fichier = request.FILES.get('fichier', None)
+    if request.method == 'POST':
+        if not can_submit:
+            messages.error(request, "Soumission non autorisée : rapport déjà soumis.")
+            return redirect('rapport_intermediaire')
 
+        fichier = request.FILES.get('fichier')
         if not fichier:
-            messages.error(request, "Veuillez télécharger un fichier pour le rapport intermédiaire.")
+            messages.error(request, "Veuillez joindre un fichier PDF.")
         else:
             RapportIntermediaire.objects.create(
                 these=these,
+                titre=these.titre,
                 fichier=fichier
             )
-            messages.success(request, "Votre rapport intermédiaire a bien été soumis !")
-
-            # Création de la notification
             Notification.objects.create(
                 utilisateur=request.user,
-                message="Votre rapport intermédiaire a bien été soumis.",
+                message="Votre rapport intermédiaire a été soumis avec succès.",
                 lu=False
             )
-
+            messages.success(request, "Votre rapport a été soumis avec succès.")
             return redirect('rapport_intermediaire')
 
     return render(request, 'presentation/rapport_intermediaire.html', {
         'these': these,
-        'is_approved': is_approved
+        'is_approved': is_approved,
+        'can_submit': can_submit,
+        'rapport_existant': rapport_existant,
     })
-
 
 
 from django.contrib import messages
@@ -379,7 +397,15 @@ def verifier_titre(request):
     })
 
 
+from django.shortcuts import render
+from django.contrib import messages
+from .models import HistoriqueAction
 
+def accueil_comite(request):
+    return render(request, 'Presentation/accueil_comite.html')
+
+def guide_comite(request):
+    return render(request, 'Presentation/guide_comite.html')
 
 from django.shortcuts import render, get_object_or_404
 from .models import These, RapportIntermediaire
@@ -424,16 +450,22 @@ def approuver_rapport_final(request, rapport_id):
 
 
 from django.db.models import Count
+from .models import Affectation  # assure-toi que c'est importé
+
 def rapport_intermediaire_view(request):
     theses = These.objects.filter(
-        statut="Approuvé",
+        statut="Approuvée",
         approuve_par_comite=True
     ).annotate(nb_rapports=Count('rapports_intermediaires')).filter(nb_rapports__gt=0)
 
-    # Injecter le rapport correspondant dans chaque thèse
     for these in theses:
-        rapport = these.rapports_intermediaires.first()  # ou `.last()` si tu veux le plus récent
-        these.rapport_intermediaire = rapport  # ajout dynamique
+        # Récupérer le rapport intermédiaire
+        rapport = these.rapports_intermediaires.first()
+        these.rapport_intermediaire = rapport
+
+        # Ajouter le rapporteur (via Affectation)
+        affectation_rapporteur = Affectation.objects.filter(these=these, role='rapporteur').first()
+        these.rapporteur = affectation_rapporteur.professeur if affectation_rapporteur else None
 
     professeurs = Utilisateur.objects.filter(role='professeur')
 
@@ -441,7 +473,7 @@ def rapport_intermediaire_view(request):
     if query:
         theses = [t for t in theses if query.lower() in t.titre.lower()]
 
-    nb_en_attente = sum(1 for t in theses if t.rapporteur is None)
+    nb_en_attente = sum(1 for t in theses if not hasattr(t, 'rapporteur') or t.rapporteur is None)
 
     context = {
         'theses': theses,
@@ -458,6 +490,8 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from .models import These, Utilisateur, Affectation, Notification
 
+from django.contrib.auth.decorators import login_required
+
 @login_required
 def assigner_rapporteur(request, these_id):
     try:
@@ -469,23 +503,26 @@ def assigner_rapporteur(request, these_id):
             these = get_object_or_404(These, id=these_id)
             rapporteur = get_object_or_404(Utilisateur, id=rapporteur_id)
 
-            # Vérifie si une affectation existe déjà
             if not Affectation.objects.filter(these=these, professeur=rapporteur, role='rapporteur').exists():
-                # Création de l'affectation
                 Affectation.objects.create(
                     professeur=rapporteur,
                     these=these,
                     role='rapporteur'
                 )
 
-                # Notification interne
+                # IMPORTANT : mettre à jour le champ rapporteur dans la thèse ET enregistrer
+                these.rapporteur = rapporteur
+                these.statut_rapport = "Assigné"
+                these.save()
+
+                print(f"🚀 Mise à jour: thèse {these.id} - rapporteur assigné à {these.rapporteur.get_full_name()}")
+
                 Notification.objects.create(
                     destinataire=rapporteur,
                     message=f"Vous êtes désigné comme rapporteur pour la thèse : {these.titre}.",
                     type="assignation"
                 )
 
-                # Envoi d'e-mail
                 send_mail(
                     subject="Assignation comme rapporteur",
                     message=(
@@ -496,7 +533,7 @@ def assigner_rapporteur(request, these_id):
                     ),
                     from_email=settings.EMAIL_HOST_USER,
                     recipient_list=[rapporteur.email],
-                    fail_silently=False  # Mets à True si tu veux ignorer les erreurs email temporairement
+                    fail_silently=False
                 )
 
                 messages.success(request, f"La thèse « {these.titre} » a bien été assignée à {rapporteur.get_full_name()}.")
@@ -504,13 +541,16 @@ def assigner_rapporteur(request, these_id):
                 messages.warning(request, f"{rapporteur.get_full_name()} est déjà rapporteur pour cette thèse.")
         
     except Exception as e:
-        # Loggue l'erreur dans la console
         print("🚨 ERREUR LORS DE L’ASSIGNATION :", str(e))
-        # Affiche une erreur à l'utilisateur
         messages.error(request, f"Erreur lors de l'assignation : {str(e)}")
 
     return redirect('rapport_inter')
 
+def accueil_prof(request):
+    return render(request, 'Presentation/accueil_prof.html')
+
+def guide_prof(request):
+    return render(request, 'Presentation/guide_prof.html')
 
 def page_rapporteur(request):
     professeur = request.user
@@ -525,6 +565,11 @@ def page_rapporteur(request):
 
     affectation = affectations[index] if total > 0 else None
 
+    rapport_intermediaire = None
+    if affectation:
+        # Récupère le premier rapport intermédiaire lié à la thèse (s'il existe)
+        rapport_intermediaire = affectation.these.rapports_intermediaires.first()
+
     if request.method == 'POST':
         decision = request.POST.get('decision')
         grille = request.FILES.get('grille')
@@ -538,8 +583,10 @@ def page_rapporteur(request):
         'affectation': affectation,
         'index': index,
         'total': total,
+        'rapport_intermediaire': rapport_intermediaire,  # on passe l'objet au template
     }
     return render(request, 'presentation/rapporteur.html', context)
+
 
 
 from django.core.paginator import Paginator
@@ -558,10 +605,10 @@ from .models import These
 def tableau_theses_comite(request):
     try:
         query = request.GET.get('q', '')
-        theses = These.objects.all()
+        theses = These.objects.all().order_by('id')  # <-- Ajout de l'ordre ici
 
         if query:
-            theses = theses.filter(titre__icontains=query)
+            theses = theses.filter(titre__icontains=query).order_by('id')  # Aussi ici après filtrage
 
         paginator = Paginator(theses, 5)
         page_number = request.GET.get('page')
@@ -573,21 +620,186 @@ def tableau_theses_comite(request):
         except EmptyPage:
             page_obj = paginator.page(paginator.num_pages)
 
-        # Récupérer les professeurs
         professeurs = Utilisateur.objects.filter(role='professeur')
-
         total_en_attente = theses.filter(statut='En attente').count()
 
         return render(request, 'presentation/tableau_theses_comite.html', {
             'page_obj': page_obj,
             'total_en_attente': total_en_attente,
-            'professeurs': professeurs,  # Ajouter les professeurs au contexte
+            'professeurs': professeurs,
         })
     except Exception as e:
         print(f"Erreur lors de la récupération des thèses : {e}")
         return render(request, 'presentation/erreur.html', {
             'message': f'Une erreur est survenue : {e}'
         })
+
+from django.core.mail import send_mail
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from .models import These
+
+@login_required
+def decision_these(request, these_id):
+    these = get_object_or_404(These, id=these_id)
+
+    if request.method == 'POST':
+        decision = request.POST.get('decision')
+        utilisateur = these.utilisateur  # doctorant
+
+        if decision == 'approuve':
+            these.statut = 'Approuvée'
+            message = (
+                f"Bonjour {utilisateur.nom},\n\n"
+                f"Votre thèse '{these.titre}' a été approuvée.\n"
+                f"Vous pouvez continuer avec le rapport intermédiaire."
+            )
+        elif decision == 'rejete':
+            these.statut = 'Rejetée'
+            message = (
+                f"Bonjour {utilisateur.nom},\n\n"
+                f"Votre thèse '{these.titre}' a été rejetée.\n"
+                f"Veuillez reprendre la copie 0."
+            )
+        else:
+            return redirect('tableau_theses_comite')
+
+        these.save()
+
+        # Envoi email
+        send_mail(
+            'Décision concernant votre thèse',
+            message,
+            'admin@theses.com',  # adresse expéditeur
+            [utilisateur.email],
+            fail_silently=False,
+        )
+
+    return redirect('tableau_theses_comite')
+
+from django.shortcuts import get_object_or_404
+from .models import These
+import difflib
+import PyPDF2
+from docx import Document
+from django.http import JsonResponse
+import os
+from django.conf import settings
+
+# Fonction pour extraire le texte du PDF
+def extraire_texte_pdf(fichier_path):
+    try:
+        with open(fichier_path, 'rb') as file:
+            reader = PyPDF2.PdfReader(file)
+            text = ""
+            for page in reader.pages:
+                page_text = page.extract_text()
+                if page_text:
+                    text += page_text
+            return text
+    except Exception as e:
+        print(f"Erreur extraction PDF: {e}")
+        return ""
+
+# Fonction pour extraire le texte du fichier Word
+def extraire_texte_word(fichier_path):
+    try:
+        doc = Document(fichier_path)
+        text = ""
+        for para in doc.paragraphs:
+            text += para.text + "\n"
+        return text
+    except Exception as e:
+        print(f"Erreur extraction Word: {e}")
+        return ""
+
+# Fonction pour comparer les textes
+import difflib
+import re
+
+def normaliser_texte(texte):
+    texte = texte.lower()  # tout en minuscules
+    texte = re.sub(r'\s+', ' ', texte)  # remplace les espaces multiples par un seul
+    texte = re.sub(r'[^\w\s]', '', texte)  # supprime ponctuation
+    return texte.strip()
+
+def comparer_textes(fichier_1, fichier_2):
+    f1_norm = normaliser_texte(fichier_1)
+    f2_norm = normaliser_texte(fichier_2)
+    return difflib.SequenceMatcher(None, f1_norm, f2_norm).ratio()
+
+def verifier_plagiat_fichier(request, these_id, champ_fichier):
+    these = get_object_or_404(These, id=these_id)
+    valeur = getattr(these, champ_fichier)
+
+    if hasattr(valeur, 'name'):
+        fichiers_a_verifier = [valeur] if valeur else []
+    else:
+        try:
+            fichiers_a_verifier = [f for f in valeur.all() if f and getattr(f, 'name', None)]
+        except Exception:
+            fichiers_a_verifier = []
+
+    if not fichiers_a_verifier:
+        return JsonResponse({"message": f"Aucun fichier {champ_fichier} trouvé.", "plagiat": False})
+
+    for fichier in fichiers_a_verifier:
+        if not fichier or not getattr(fichier, 'name', None):
+            continue
+
+        if fichier.name.endswith('.pdf'):
+            texte_courant = extraire_texte_pdf(fichier.path)
+        elif fichier.name.endswith('.docx'):
+            texte_courant = extraire_texte_word(fichier.path)
+        else:
+            continue
+
+        autres_theses = These.objects.exclude(id=these_id)
+        for t in autres_theses:
+            try:
+                autres_valeur = getattr(t, champ_fichier)
+                if hasattr(autres_valeur, 'name'):
+                    autres_fichiers = [autres_valeur] if autres_valeur else []
+                else:
+                    try:
+                        autres_fichiers = [f for f in autres_valeur.all() if f and getattr(f, 'name', None)]
+                    except Exception:
+                        autres_fichiers = []
+
+                for autre_fichier in autres_fichiers:
+                    if not autre_fichier or not getattr(autre_fichier, 'name', None):
+                        continue
+                    if autre_fichier.name.endswith('.pdf'):
+                        texte_autre = extraire_texte_pdf(autre_fichier.path)
+                    elif autre_fichier.name.endswith('.docx'):
+                        texte_autre = extraire_texte_word(autre_fichier.path)
+                    else:
+                        continue
+
+                    similarity_ratio = comparer_textes(texte_courant, texte_autre)
+                    print(f"Comparaison {champ_fichier} entre {these.titre} et {t.titre} : {similarity_ratio}")
+
+                    if similarity_ratio >= 0.9:
+                        return JsonResponse({
+                            "message": "Plagiat détecté ❌",
+                            "plagiat": True,
+                            "titre": t.titre
+                        })
+            except Exception as e:
+                print(f"Erreur comparaison avec {t.titre}: {e}")
+
+    return JsonResponse({"message": "Aucune similarité détectée ✅", "plagiat": False})
+
+
+
+# Puis tes vues deviennent simplement :
+
+def verifier_plagiat(request, these_id):
+    return verifier_plagiat_fichier(request, these_id, 'fichier')
+
+def verifier_plagiat_rapport(request, these_id):
+    return verifier_plagiat_fichier(request, these_id, 'rapports_intermediaires')
+
 
 
 
@@ -599,21 +811,33 @@ def theses_academiques(request):
 # Commenter la thèse (pour le comité)
 @login_required
 def commenter_these(request, these_id):
-    these = These.objects.get(id=these_id)
+    these = get_object_or_404(These, id=these_id)
+
     if request.method == 'POST':
         form = CommentaireForm(request.POST)
         if form.is_valid():
             commentaire = form.save(commit=False)
             commentaire.these = these
             commentaire.save()
-            # Envoi du message à l'étudiant
+
+            # Enregistrer un message à l'étudiant
             message = Message(etudiant=these.utilisateur, contenu=form.cleaned_data['commentaire'])
             message.save()
+
+            # Créer une notification pour l'étudiant
+            Notification.objects.create(
+                utilisateur=these.utilisateur,
+                titre="Nouveau commentaire sur votre thèse",
+                message=f"Un commentaire a été ajouté à votre thèse '{these.titre}'.",
+                commentaire=form.cleaned_data['commentaire']
+            )
+
             return redirect('tableau_theses_comite')
     else:
         form = CommentaireForm()
 
     return render(request, 'etudiants/commenter_these.html', {'form': form, 'these': these})
+
 
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
@@ -645,41 +869,39 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import These, Commentaire
 
-@login_required
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import These, Notification
+
+@csrf_exempt  # à éviter en production, utilise `@login_required` et les protections CSRF
 def rejeter_these(request, these_id):
-    these = These.objects.get(id=these_id)
-
     if request.method == 'POST':
-        commentaire = request.POST.get('commentaire')
+        try:
+            these = These.objects.get(id=these_id)
+            commentaire = request.POST.get('commentaire', '').strip()
 
-        # Mettre à jour le statut de la thèse
-        these.statut = 'Rejeté'
-        these.save()
+            if not commentaire:
+                return JsonResponse({'error': 'Commentaire requis'}, status=400)
 
-        # Sauvegarder le commentaire
-        commentaire_obj = Commentaire.objects.create(
-            these=these,
-            commentaire=commentaire
-        )
+            these.statut = 'Rejeté'
+            these.commentaire_rejet = commentaire
+            these.save()
 
-        # Envoyer un message à l’étudiant
-        message = Message.objects.create(
-            source=request.user,  # L'utilisateur actuellement connecté (le comité)
-            destinataire=these.utilisateur,  # L'étudiant auquel la thèse appartient
-            objectif="Thèse rejetée",
-            contenu=f"Votre thèse '{these.titre}' a été rejetée. Commentaire du comité : {commentaire}"
-        )
+            # Créer la notification de rejet
+            Notification.objects.create(
+                utilisateur=these.utilisateur,
+                titre="Thèse rejetée",
+                message="Votre thèse a été rejetée par le comité.",
+                commentaire=commentaire
+            )
 
-        # Créer une notification pour informer l’étudiant
-        Notification.objects.create(
-            destinataire=these.utilisateur,
-            message=f"Votre thèse '{these.titre}' a été rejetée. Consultez votre messagerie.",
-            type='message'
-        )
+            return JsonResponse({'message': 'Thèse rejetée avec succès.'})
+        except These.DoesNotExist:
+            return JsonResponse({'error': 'Thèse introuvable'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 
-        return redirect('tableau_theses_comite')
-
-    return render(request, 'etudiants/rejeter_these.html', {'these': these})
+    return JsonResponse({'error': 'Méthode non autorisée'}, status=405)
 
 
 
@@ -695,45 +917,22 @@ from .models import Notification
 
 @login_required
 def notifications_view(request):
-    # Récupérer toutes les notifications de l'utilisateur triées par date_creation (descendant)
     notifications = Notification.objects.filter(utilisateur=request.user).order_by('-date_creation')
+
+    # Compter les non lus AVANT de marquer comme lus
+    nb_non_lues = notifications.filter(lu=False).count()
 
     # Marquer les notifications non lues comme lues
     notifications.filter(lu=False).update(lu=True)
 
     return render(request, 'presentation/notifications.html', {
-        'notifications': notifications
+        'notifications': notifications,
+        'nb_non_lues': nb_non_lues,
     })
 
 
 # dans views.py
-from django.contrib import messages
-from django.shortcuts import get_object_or_404, redirect
-from .models import These, Notification
 
-def rejeter_these(request, these_id):
-    if request.method == 'POST':
-        these = get_object_or_404(These, pk=these_id)
-        commentaire = request.POST.get('commentaire', '')
-        
-        # Mettre à jour le statut de la thèse
-        these.statut = 'Rejeté'
-        these.commentaire_rejet = commentaire  # Ajoutez ce champ à votre modèle These si nécessaire
-        these.save()
-        
-        # Créer la notification
-        Notification.objects.create(
-            utilisateur=these.utilisateur,
-            titre="Votre thèse a été rejetée",
-            message=f"Votre thèse '{these.titre}' a été rejetée par le comité.",
-            lien=f"/theses/{these.id}",  # Lien vers la page de la thèse
-            commentaire=commentaire  # Stocke le commentaire
-        )
-        
-        messages.success(request, "La thèse a été rejetée et le candidat a été notifié.")
-        return redirect('tableau_theses_comite')
-    
-    
     
     
  
@@ -841,3 +1040,62 @@ def liste_soutenances(request):
     }
 
     return render(request, 'presentation/liste_soutenances.html', context)
+
+
+
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+def deconnexion_etudiant(request):
+    if request.method == "POST":
+        logout(request)
+        return redirect('connexion')  # Page de connexion pour l'étudiant
+    else:
+        return redirect('connexion')  # Empêche les accès en GET
+    
+from django.contrib.auth import logout
+
+def deconnexion_comite(request):
+    logout(request)
+    return redirect('connexion')  # Redirige vers la page de connexion après la déconnexion
+
+
+def deconnexion_professeur(request):
+    logout(request)
+    return redirect('connexion')  # Redirige vers la page de connexion après la déconnexion
+
+
+
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib import messages
+from django.urls import reverse_lazy
+
+class CustomPasswordChangeView(PasswordChangeView):
+    template_name = 'registration/password_change.html'
+    success_url = reverse_lazy('password_change_done')  # Redirige ici après le changement réussi
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        self.request.user.password_changed = True  # Met à jour un champ personnalisé si tu l'as défini
+        self.request.user.save()
+        messages.success(self.request, "✅ Mot de passe modifié avec succès !")
+        return response
+
+
+
+
+from django.shortcuts import render, get_object_or_404
+from .models import DemandeInscription
+
+@login_required
+def profil_comite(request):
+    utilisateur = request.user  # Prof connecté
+    return render(request, 'Presentation/profil_comite.html', {'utilisateur': utilisateur})
+
+
+@login_required
+def profil_prof(request):
+    utilisateur = request.user  # Prof connecté
+    return render(request, 'Presentation/profil_prof.html', {'utilisateur': utilisateur})
