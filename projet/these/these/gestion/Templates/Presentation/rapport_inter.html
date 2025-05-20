@@ -4,633 +4,991 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ThèseManager - Rapports Intermédiaires</title>
+    <title>Rapport Intermédiaire - Liste des Thèses</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-<style>
+    <style>
+      
 :root {
-  --menu-bg: #5b7a9d;
-  --menu-hover: #7590ad;
-  --menu-active: #496785;
-  --menu-text: #ffffff;
-  --form-bg: #ffffff;
-  --primary: #8ab6ff;
-  --secondary: #c4e0ff;
-  --accent1: #ffd6e0;
-  --accent2: #c5f8c7;
-  --accent3: #fff4bd;
-  --accent4: #e0c2ff;
-  --text: #4a5568;
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
+    --menu-bg: #3b8a5e; /* Vert foncé élégant pour le menu */
+    --menu-hover: #4da278;
+    --menu-active: #2e6e4a;
+    --menu-text: #ffffff;
+    --form-bg: #ffffff;
+    --primary: #5cbc8b; /* Vert principal */
+    --secondary: #ffffff; /* Fond blanc */
+    --accent1: #e0f8e0; /* Vert pastel clair */
+    --accent2: #b5e8ca; /* Vert pastel moyen */
+    --accent3: #f0ffed; /* Vert pastel très clair */
+    --accent4: #c9e6d4; /* Vert pastel additionnel */
+    --text: #2c5b45;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    
+    /* Statut couleurs */
+    --status-approved: #3b8a5e;
+    --status-pending: #e9b949;
+    --status-rejected: #e05252;
+    
+    /* Autres couleurs pour le tableau */
+    --table-header: #f8f5ee; /* Beige pâle */
+    --table-row-even: #e8f5e9; /* Vert très pâle */
+    --table-row-odd: #ffffff; /* Blanc */
+    --table-hover: #f0f9f0; /* Vert pastel très léger */
+    --table-border: #c9e6d4;
+    
+    /* Nouvelles couleurs */
+    --wave-top-color: #b5e8ca; /* Vert pastel pour les vagues */
+    --wave-bottom-color: #f7d794; /* Jaune pastel pour les vagues */
+    --waiting-count: #e05252; /* Rouge pour le nombre d'attente */
+    --button-search: #ff9e9e; /* Rouge pastel pour le bouton recherche */
+    --button-download: #e05252; /* Rouge pour télécharger */
+    --button-verify: #ff9e9e; /* Rouge pastel pour vérifier */
 }
 
 /* Reset */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Nunito', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Nunito', sans-serif;
 }
 
 body {
-  background-color: #f0f5ff;
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
+    background-color: var(--secondary);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
+/* Layout principal */
 .layout {
-  display: flex;
+    display: flex;
+    min-height: 100vh;
 }
 
 /* Sidebar */
 .sidebar {
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 260px;
-  background: var(--menu-bg);
-  box-shadow: var(--shadow-lg);
-  z-index: 999;
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  padding: 20px 0;
+    width: 260px;
+    background-color: var(--menu-bg);
+    color: var(--menu-text);
+    padding: 1.5rem 0;
+    z-index: 10;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
 }
 
-.sidebar .logo {
-  height: 90px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  color: white;
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 20px;
+.logo-container {
+    display: flex;
+    align-items: center;
+    padding: 0 1.5rem;
+    margin-bottom: 2rem;
 }
 
-.sidebar nav {
-  padding: 0 15px;
+.logo-container img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 1rem;
+    object-fit: cover;
 }
 
-.sidebar nav a {
-  display: flex;
-  align-items: center;
-  height: 56px;
-  text-decoration: none;
-  color: var(--menu-text);
-  border-radius: var(--radius-md);
-  padding: 0 15px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-  margin-bottom: 10px;
+.logo-text {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: white;
 }
 
-.sidebar nav a:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: all 0.5s ease;
+.menu {
+    list-style: none;
+    padding: 0;
 }
 
-.sidebar nav a:hover:before {
-  left: 100%;
+.menu-item {
+    margin-bottom: 0.5rem;
 }
 
-.sidebar nav a:hover {
-  background: var(--menu-hover);
-  transform: translateX(5px);
+.menu-link {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1.5rem;
+    text-decoration: none;
+    color: var(--menu-text);
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
 }
 
-.sidebar nav a.active {
-  background: var(--menu-active);
+.menu-link:hover {
+    background-color: var(--menu-hover);
+    border-left-color: #ffffff;
 }
 
-.sidebar nav a i {
-  min-width: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-  margin-right: 10px;
+.menu-link.active {
+    background-color: var(--menu-active);
+    border-left-color: var(--accent2);
+    font-weight: 600;
 }
 
-/* Main Content */
-.main-content {
-  margin-left: 260px;
-  padding: 30px;
-  min-height: 100vh;
-  position: relative;
-  transition: all 0.3s ease;
-  width: calc(100% - 260px);
+.menu-icon {
+    margin-right: 1rem;
+    width: 18px;
+    text-align: center;
 }
 
-/* Message d'alerte */
-.alert {
-  padding: 15px;
-  border-radius: var(--radius-md);
-  margin-bottom: 20px;
-  background: rgba(197, 248, 199, 0.5);
-  border-left: 4px solid #48bb78;
-  display: flex;
-  align-items: center;
+/* Contenu principal */
+.container {
+    flex: 1;
+    padding: 2rem;
+    margin-left: 260px;
+    position: relative;
+    overflow: hidden;
 }
 
-.alert-success {
-  background: rgba(197, 248, 199, 0.5);
-  border-left: 4px solid #48bb78;
+/* Effet de vague */
+.wave-top, .wave-bottom {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    z-index: -1;
 }
 
-/* Titre et badge */
-.titre {
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 25px;
-  display: flex;
-  align-items: center;
-  color: var(--text);
-}
-
-.badge {
-  background-color: var(--accent1);
-  border-radius: 20px;
-  padding: 5px 15px;
-  font-size: 16px;
-  margin-left: 15px;
-  color: #c53030;
-  font-weight: 600;
-}
-
-/* Search Bar */
-.search-bar {
-  display: flex;
-  margin-bottom: 25px;
-  max-width: 500px;
-}
-
-.search-bar input {
-  flex: 1;
-  padding: 12px 15px;
-  border: 2px solid #e2e8f0;
-  border-radius: var(--radius-md) 0 0 var(--radius-md);
-  font-size: 16px;
-  transition: all 0.3s ease;
-  background-color: #f8fafc;
-}
-
-.search-bar input:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(138, 182, 255, 0.3);
-}
-
-.search-bar button {
-  background: linear-gradient(45deg, var(--primary), var(--secondary));
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 0 var(--radius-md) var(--radius-md) 0;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.search-bar button:hover {
-  background: linear-gradient(45deg, var(--menu-hover), var(--primary));
-}
-
-/* Table */
-.styled-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  box-shadow: var(--shadow-md);
-  margin-bottom: 30px;
-}
-
-.styled-table thead {
-  background-color: var(--secondary);
-}
-
-.styled-table th {
-  padding: 15px;
-  text-align: left;
-  color: var(--text);
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 14px;
-  letter-spacing: 1px;
-}
-
-.styled-table td {
-  padding: 15px;
-  text-align: left;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.styled-table tr:last-child td {
-  border-bottom: none;
-}
-
-.styled-table tr:hover {
-  background-color: #f8fafc;
-}
-
-/* Button Styles */
-.btn-download, .btn-action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 8px 12px;
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  font-weight: 600;
-  margin-right: 5px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  border: none;
-}
-
-.btn-download {
-  background-color: var(--secondary);
-  color: var(--text);
-}
-
-.btn-action {
-  background-color: var(--primary);
-  color: white;
-}
-
-.btn-download:hover, .btn-action:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
-}
-
-.text-warning {
-  color: #ed8936;
-  font-weight: 600;
-}
-
-/* Form Styles */
-.assign-form {
-  display: flex;
-  gap: 10px;
-}
-
-.assign-form select {
-  flex: 1;
-  padding: 8px 12px;
-  border: 2px solid #e2e8f0;
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  background-color: #f8fafc;
-}
-
-.assign-form select:focus {
-  outline: none;
-  border-color: var(--primary);
-}
-
-.assign-button {
-  background-color: var(--accent2);
-  color: #2f855a;
-  border: none;
-  padding: 8px 15px;
-  border-radius: var(--radius-sm);
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.assign-button:hover {
-  background-color: #9ae6b4;
-  transform: translateY(-2px);
-}
-
-.assign-button.assigned {
-  background-color: #d1d5db;
-  color: #4b5563;
-  cursor: not-allowed;
-}
-
-/* Popup Styles */
-.overlay {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
-  backdrop-filter: blur(4px);
-}
-
-.overlay.show {
-  display: block;
-}
-
-.popup {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  padding: 25px;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-  z-index: 1001;
-  min-width: 300px;
-  max-width: 450px;
-  animation: zoomIn 0.3s;
-}
-
-.popup.show {
-  display: block;
-}
-
-@keyframes zoomIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-}
-
-.popup .close {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  font-size: 22px;
-  cursor: pointer;
-  color: var(--text);
-  transition: all 0.2s ease;
-}
-
-.popup .close:hover {
-  color: var(--primary);
-  transform: scale(1.2);
-}
-
-/* Wave decorations */
 .wave-top {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
-  z-index: -1;
-}
-
-.wave-top svg {
-  position: relative;
-  display: block;
-  width: calc(100% + 1.3px);
-  height: 120px;
-}
-
-.wave-top .shape-fill {
-  fill: var(--secondary);
+    top: 0;
+    height: 120px;
 }
 
 .wave-bottom {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
-  z-index: -1;
+    bottom: 0;
+    height: 120px;
+    transform: rotate(180deg);
 }
 
-.wave-bottom svg {
-  position: relative;
-  display: block;
-  width: calc(100% + 1.3px);
-  height: 120px;
-  transform: rotateY(180deg);
+.wave-top svg, .wave-bottom svg {
+    position: relative;
+    display: block;
+    width: calc(100% + 1.3px);
+    height: 120px;
+}
+
+.wave-top .shape-fill {
+    fill: var(--wave-top-color);
 }
 
 .wave-bottom .shape-fill {
-  fill: var(--accent1);
-  opacity: 0.5;
+    fill: var(--wave-bottom-color);
 }
-</style>
+
+/* Carte principale */
+.card {
+    background: var(--form-bg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 1.5rem;
+    background-color: var(--accent4);
+    color: var(--text);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+}
+
+.card-header h2 i {
+    margin-right: 0.5rem;
+    color: var(--primary);
+}
+
+/* Badge pour le nombre d'attente */
+.badge {
+    background-color: var(--waiting-count);
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    margin-left: 0.5rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Barre de recherche */
+.search-bar {
+    display: flex;
+    margin-bottom: 1.5rem;
+}
+
+.form-group {
+    flex: 1;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid var(--accent2);
+    border-radius: var(--radius-sm);
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(92, 188, 139, 0.2);
+}
+
+/* Bouton de recherche */
+.btn {
+    background-color: var(--button-search);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn i {
+    margin-right: 0.5rem;
+}
+
+.btn:hover {
+    background-color: #ff8b8b;
+}
+
+/* Tableau */
+.table-responsive {
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th {
+    background-color: var(--table-header);
+    color: var(--text);
+    font-weight: 700;
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 2px solid var(--table-border);
+}
+
+.table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--table-border);
+    vertical-align: top;
+}
+
+.table tr:nth-child(even) {
+    background-color: var(--table-row-even);
+}
+
+.table tr:nth-child(odd) {
+    background-color: var(--table-row-odd);
+}
+
+.table tr:hover {
+    background-color: var(--table-hover);
+}
+
+/* Statuts */
+.status {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.status i {
+    margin-right: 0.5rem;
+}
+
+.status.approved {
+    background-color: rgba(59, 138, 94, 0.1);
+    color: var(--status-approved);
+}
+
+.status.pending {
+    background-color: rgba(233, 185, 73, 0.1);
+    color: var(--status-pending);
+}
+
+.status.rejected {
+    background-color: rgba(224, 82, 82, 0.1);
+    color: var(--status-rejected);
+}
+
+/* Boutons d'action */
+.action-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.btn-action {
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.btn-action i {
+    margin-right: 0.5rem;
+}
+
+.btn-approve {
+    background-color: rgba(59, 138, 94, 0.1);
+    color: var(--status-approved);
+    transition: background-color 0.3s ease;
+}
+
+.btn-approve:hover {
+    background-color: rgba(59, 138, 94, 0.2);
+}
+
+.btn-reject {
+    background-color: rgba(224, 82, 82, 0.1);
+    color: var(--status-rejected);
+    transition: background-color 0.3s ease;
+}
+
+.btn-reject:hover {
+    background-color: rgba(224, 82, 82, 0.2);
+}
+
+/* Formulaire d'assignation */
+.assign-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Bouton télécharger */
+.btn-download {
+    background-color: rgba(224, 82, 82, 0.1);
+    color: var(--button-download);
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.btn-download:hover {
+    background-color: rgba(224, 82, 82, 0.2);
+}
+
+.btn-download i {
+    margin-right: 0.5rem;
+}
+
+/* Bouton vérifier */
+.btn-verify {
+    background-color: rgba(255, 158, 158, 0.1);
+    color: var(--button-verify);
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.btn-verify:hover {
+    background-color: rgba(255, 158, 158, 0.2);
+}
+
+.btn-verify i {
+    margin-right: 0.5rem;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1.5rem;
+}
+
+.btn-page {
+    background-color: var(--accent2);
+    color: var(--text);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    text-decoration: none;
+    margin: 0 0.5rem;
+    transition: background-color 0.3s ease;
+}
+
+.btn-page:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
+.current {
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.modal.show {
+    display: block;
+}
+
+.modal-content {
+    background-color: var(--form-bg);
+    margin: 10% auto;
+    padding: 2rem;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    max-width: 600px;
+    position: relative;
+    animation: modalFadeIn 0.3s;
+}
+
+.close {
+    position: absolute;
+    right: 1.5rem;
+    top: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text);
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: var(--primary);
+}
+
+.modal h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+}
+
+.modal h3 i {
+    margin-right: 0.5rem;
+    color: var(--primary);
+}
+
+.close-btn {
+    background-color: var(--accent2);
+    color: var(--text);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.close-btn:hover {
+    background-color: var(--accent4);
+}
+
+/* Overlay pour les modals */
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+}
+
+.overlay.show {
+    display: block;
+}
+
+/* Popup plagiat */
+#popup-plagiat {
+    display: none;
+}
+
+#popup-plagiat.show {
+    display: block;
+}
+
+/* Messages d'alerte */
+.alert {
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1rem;
+}
+
+.alert-success {
+    background-color: rgba(59, 138, 94, 0.1);
+    color: var(--status-approved);
+    display: flex;
+    align-items: center;
+}
+
+.alert-success i {
+    margin-right: 0.5rem;
+    color: var(--status-approved);
+}
+
+.text-warning {
+    color: var(--status-pending);
+    display: flex;
+    align-items: center;
+}
+
+.text-warning i {
+    margin-right: 0.5rem;
+}
+
+/* Animation d'entrée */
+.fade-in {
+    animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Styles responsifs */
+@media (max-width: 992px) {
+    .sidebar {
+        width: 220px;
+    }
+    
+    .container {
+        margin-left: 220px;
+    }
+}
+
+@media (max-width: 768px) {
+    .layout {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding: 1rem 0;
+    }
+    
+    .container {
+        margin-left: 0;
+        padding: 1rem;
+    }
+    
+    .logo-container {
+        margin-bottom: 1rem;
+    }
+    
+    .menu-link {
+        padding: 0.6rem 1.5rem;
+    }
+    
+    .wave-top, .wave-bottom {
+        height: 60px;
+    }
+    
+    .wave-top svg, .wave-bottom svg {
+        height: 60px;
+    }
+    
+    .card-header {
+        padding: 1rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .search-bar {
+        flex-direction: column;
+    }
+    
+    .search-bar button {
+        margin-left: 0 !important;
+        margin-top: 0.5rem;
+        width: 100% !important;
+    }
+    
+    .table th, .table td {
+        padding: 0.75rem;
+    }
+    
+    .action-group {
+        flex-direction: row;
+    }
+    
+    .modal-content {
+        width: 90%;
+        margin: 20% auto;
+        padding: 1.5rem;
+    }
+}
+
+/* Styles spécifiques pour le contenu du popup plagiat */
+#contenu-plagiat div {
+    border-radius: var(--radius-md) !important;
+}
+
+#contenu-plagiat div[style*="color: #e74c3c"] {
+    color: var(--status-rejected) !important;
+    background-color: rgba(224, 82, 82, 0.1) !important;
+}
+
+#contenu-plagiat div[style*="color: #2ecc71"] {
+    color: var(--status-approved) !important;
+    background-color: rgba(59, 138, 94, 0.1) !important;
+}
+
+/* Style pour le message d'assign */
+#assign-message div {
+    border-radius: var(--radius-md) !important;
+}
+
+    </style>
 </head>
 <body>
-    <div class="layout">
-        <!-- Sidebar Menu -->
-        <aside class="sidebar">
-            <div class="logo">
-                <i class="fas fa-graduation-cap"></i> ThèseManager
-            </div>
-            <nav>
-                <a href="#"><i class="fas fa-home"></i> Accueil</a>
-                <a href="{% url 'tableau_theses_comite' %}"><i class="fas fa-copy"></i> Copie 0</a>
-                <a href="#" class="active"><i class="fas fa-file-alt"></i> Rapport intermédiaire</a>
-                <a href="#"><i class="fas fa-star"></i> Évaluation</a>
-                <a href="#"><i class="fas fa-users"></i> Composition jury</a>
-                <a href="#"><i class="fas fa-sign-out-alt"></i> Déconnexion</a>
-            </nav>
-        </aside>
+<div class="layout">
+    <!-- Sidebar améliorée -->
+    <aside class="sidebar">
+        <div class="logo-container">
+            <img src="{% static 'images/log.png' %}" alt="Logo" onerror="this.src='https://via.placeholder.com/60'; this.onerror=null;">
+            <div class="logo-text">Comité</div>
+        </div>
+        <ul class="menu">
+            <li class="menu-item">
+                <a href="{% url 'accueil_comite' %}" class="menu-link">
+                    <span class="menu-icon"><i class="fas fa-home"></i></span>
+                    <span class="menu-title">Accueil</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'guide_comite' %}" class="menu-link">
+                    <span class="menu-icon"><i class="fas fa-book"></i></span>
+                    <span class="menu-title">Guide</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'tableau_theses_comite' %}" class="menu-link">
+                    <span class="menu-icon"><i class="fas fa-copy"></i></span>
+                    <span class="menu-title">Copie 0</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'rapport_inter' %}" class="menu-link active">
+                    <span class="menu-icon"><i class="fas fa-file-alt"></i></span>
+                    <span class="menu-title">Rapport intermédiaire</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'composition_jury' %}" class="menu-link">
+                    <span class="menu-icon"><i class="fas fa-users"></i></span>
+                    <span class="menu-title">Composition jury</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'profil_comite' %}" class="menu-link">
+                    <span class="menu-icon"><i class="fas fa-user"></i></span>
+                    <span class="menu-title">Profil</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'deconnexion_comite' %}" class="menu-link">
+                    <span class="menu-icon"><i class="fas fa-sign-out-alt"></i></span>
+                    <span class="menu-title">Déconnexion</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
 
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Decorative Wave Top -->
-            <div class="wave-top">
-                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
-                </svg>
-            </div>
+    <!-- Contenu principal -->
+    <main class="container">
+        <!-- Effet de vague décoratif en haut -->
+        <div class="wave-top">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+            </svg>
+        </div>
 
-            <!-- Messages -->
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-success">
-                        <i class="fas fa-check-circle"></i> {{ message }}
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success fade-in">
+                    <i class="fas fa-check-circle"></i> {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="card fade-in">
+            <div class="card-header">
+                <h2><i class="fas fa-file-alt"></i> Rapports Intermédiaires <span class="badge">({{ nb_en_attente }} en attente)</span></h2>
+            </div>
+            <div class="card-body">
+                <form method="GET" class="search-bar">
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <input type="text" name="q" class="form-control" placeholder="Rechercher par titre de thèse..." value="{{ request.GET.q }}">
                     </div>
-                {% endfor %}
-            {% endif %}
+                    <button type="submit" class="btn" style="width: auto; margin-left: 10px; padding: 15px 20px;">
+                        <i class="fas fa-search"></i> Rechercher
+                    </button>
+                </form>
 
-            <!-- Page Title -->
-            <h2 class="titre">
-                <i class="fas fa-file-alt"></i> Rapports Intermédiaires
-                <span class="badge"><i class="fas fa-clock"></i> {{ nb_en_attente }} en attente</span>
-            </h2>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-user"></i> Utilisateur</th>
+                                <th><i class="fas fa-heading"></i> Titre</th>
+                                <th><i class="fas fa-file-pdf"></i> Document</th>
+                                <th><i class="fas fa-user-tie"></i> Rapporteur</th>
+                                <th><i class="fas fa-tasks"></i> Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for these in theses %}
+                            <tr data-rapporteur-assigne="{% if these.rapporteur %}true{% else %}false{% endif %}">
+                                <td>{{ these.utilisateur.id }} - {{ these.utilisateur.nom }}</td>
+                                <td>{{ these.titre }}</td>
+                                <td>
+                                    {% if these.rapport_intermediaire %}
+                                    <div style="display: flex; flex-direction: column; gap: 5px;">
+                                        <a href="{{ these.rapport_intermediaire.fichier.url }}" class="btn-download" target="_blank">
+                                            <i class="fas fa-file-download"></i>Télécharger {{ these.rapport_intermediaire.titre }}
+                                        </a>
+                                        <button onclick="verifierPlagiatRapport({{ these.id }})" class="btn-verify">
+                                            <i class="fas fa-search"></i> Vérifier Rapport
+                                        </button>
+                                    </div>
+                                    {% else %}
+                                    <span class="text-warning"><i class="fas fa-exclamation-triangle"></i> Pas de rapport</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if these.rapporteur %}
+                                    {{ these.rapporteur.get_full_name }}
+                                    {% else %}
+                                    <span class="text-warning"><i class="fas fa-exclamation-triangle"></i> Non assigné</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if these.rapporteur %}
+                                    <span class="status approved">
+                                        <i class="fas fa-check-circle"></i> Rapporteur déjà assigné
+                                    </span>
+                                    {% else %}
+                                    <form method="POST" action="{% url 'assigner_rapporteur' these.id %}" class="assign-form">
+                                        {% csrf_token %}
+                                        <select name="rapporteur_id" class="form-control" required>
+                                            <option value="">Choisir un professeur</option>
+                                            {% for prof in professeurs %}
+                                            <option value="{{ prof.id }}">{{ prof.nom }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <button type="submit" class="btn-action btn-approve">
+                                            <i class="fas fa-user-check"></i> Assigner
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
 
-            <!-- Search Bar -->
-            <form method="GET" class="search-bar">
-                <input type="text" name="q" placeholder="Rechercher par titre de thèse..." value="{{ request.GET.q }}">
-                <button type="submit"><i class="fas fa-search"></i> Rechercher</button>
-            </form>
-
-            <!-- Table -->
-            <div class="table-responsive">
-                <table class="styled-table">
-                    <thead>
-                        <tr>
-                            <th><i class="fas fa-user"></i> Utilisateur</th>
-                            <th><i class="fas fa-heading"></i> Titre</th>
-                            <th><i class="fas fa-file-pdf"></i> Document</th>
-                            <th><i class="fas fa-user-tie"></i> Rapporteur</th>
-                            <th><i class="fas fa-tasks"></i> Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for these in theses %}
-                        <tr>
-                            <td>{{ these.utilisateur.id }} - {{ these.utilisateur.get_full_name }}</td>
-                            <td>{{ these.titre }}</td>
-                            <td>
-                               {% if these.rapport_intermediaire %}
-    <a href="{{ these.rapport_intermediaire.url }}" class="btn-download" target="_blank">
-        <i class="fas fa-download"></i> Télécharger
-    </a>
-    <button onclick="verifierPlagiat({{ these.id }})" class="btn-action">
-        <i class="fas fa-search"></i> Vérifier
-    </button>
-{% else %}
-    <span class="text-warning">
-        <i class="fas fa-exclamation-triangle"></i> Pas de rapport
-    </span>
-{% endif %}
-
-                            </td>
-                            <td>
-                                <form method="POST" action="{% url 'assigner_rapporteur' these.id %}" class="assign-form">
-                                    {% csrf_token %}
-                                    <select name="rapporteur_id" required>
-                                        <option value="">Choisir un professeur</option>
-                                        {% for prof in professeurs %}
-                                        <option value="{{ prof.id }}">{{ prof.nom }}</option>
-                                        {% endfor %}
-                                    </select>
-                                    <button type="submit" class="assign-button">
-                                        <i class="fas fa-user-check"></i> Assigner
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                <div class="pagination">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn-page">
+                            <i class="fas fa-chevron-left"></i> Précédent
+                        </a>
+                    {% endif %}
+                    <span class="current">Page {{ page_obj.number }} sur {{ page_obj.paginator.num_pages }}</span>
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" class="btn-page">
+                            Suivant <i class="fas fa-chevron-right"></i>
+                        </a>
+                    {% endif %}
+                </div>
             </div>
+        </div>
 
-            <!-- Decorative Wave Bottom -->
-            <div class="wave-bottom">
-                <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
-                </svg>
-            </div>
-        </main>
-    </div>
+        <!-- Effet de vague décoratif en bas -->
+        <div class="wave-bottom">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+            </svg>
+        </div>
+    </main>
+</div>
 
-    <!-- Popups -->
-    <div class="overlay" id="overlay"></div>
-    
-    <!-- Popup de vérification de plagiat -->
-    <div id="popup-plagiat" class="popup">
-        <span onclick="fermerPopupPlagiat()" class="close">&times;</span>
-        <h3><i class="fas fa-search"></i> Vérification de plagiat</h3>
-        <p id="contenu-plagiat"></p>
+<!-- Overlay pour les popups -->
+<div id="overlay" class="overlay"></div>
+
+<!-- Popup Plagiat -->
+<div id="popup-plagiat" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="fermerPopupPlagiat()">&times;</span>
+        <h3><i class="fas fa-search"></i> Résultat de la vérification</h3>
+        <div id="contenu-plagiat" class="alert"></div>
+        <button type="button" class="close-btn" onclick="fermerPopupPlagiat()">
+            <i class="fas fa-times"></i> Fermer
+        </button>
     </div>
-    
-    <!-- Popup d'assignation -->
-    <div id="assign-popup" class="popup">
-        <span class="close" onclick="closePopup()">×</span>
+</div>
+
+<!-- Popup d'assignation -->
+<div id="assign-popup" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closePopup()">&times;</span>
         <h3><i class="fas fa-user-check"></i> Assignation de rapporteur</h3>
-        <p id="assign-message"></p>
+        <div id="assign-message" class="alert"></div>
+        <button type="button" class="close-btn" onclick="closePopup()">
+            <i class="fas fa-times"></i> Fermer
+        </button>
     </div>
+</div>
 
-    <script>
-        // Fonction pour vérifier le plagiat
-        function verifierPlagiat(theseId) {
-            fetch(`/etudiants/verifier_plagiat/${theseId}/`)
-                .then(response => response.json())
-                .then(data => {
-                    const contenu = document.getElementById("contenu-plagiat");
-                    if (data.plagiat) {
-                        contenu.innerHTML = `<div style="color: #e74c3c; padding: 15px; background-color: rgba(231, 76, 60, 0.1); border-radius: 8px;"><i class="fas fa-times-circle"></i> Plagiat détecté ! Cette thèse ressemble à : <strong>${data.titre}</strong></div>`;
-                    } else {
-                        contenu.innerHTML = `<div style="color: #2ecc71; padding: 15px; background-color: rgba(46, 204, 113, 0.1); border-radius: 8px;"><i class="fas fa-check-circle"></i> Aucune similarité détectée !</div>`;
-                    }
-                    
-                    document.getElementById("popup-plagiat").classList.add("show");
-                    document.getElementById("overlay").classList.add("show");
-                })
-                .catch(error => {
-                    document.getElementById("contenu-plagiat").innerHTML = `<div style="color: #e74c3c; padding: 15px; background-color: rgba(231, 76, 60, 0.1); border-radius: 8px;"><i class="fas fa-exclamation-circle"></i> Erreur lors de la vérification.</div>`;
-                    document.getElementById("popup-plagiat").classList.add("show");
-                    document.getElementById("overlay").classList.add("show");
-                });
-        }
-        
-        // Fermer popup plagiat
-        function fermerPopupPlagiat() {
-            document.getElementById("popup-plagiat").classList.remove("show");
-            document.getElementById("overlay").classList.remove("show");
-        }
-        
-        // Afficher popup d'assignation
-        function showAssignPopup(message, isSuccess = true) {
-            const popup = document.getElementById('assign-popup');
-            const overlay = document.getElementById('overlay');
-            const messageBox = document.getElementById('assign-message');
-            
-            if (isSuccess) {
-                messageBox.innerHTML = `<div style="color: #2ecc71; padding: 15px; background-color: rgba(46, 204, 113, 0.1); border-radius: 8px;"><i class="fas fa-check-circle"></i> ${message}</div>`;
-            } else {
-                messageBox.innerHTML = `<div style="color: #e74c3c; padding: 15px; background-color: rgba(231, 76, 60, 0.1); border-radius: 8px;"><i class="fas fa-times-circle"></i> ${message}</div>`;
+<script>
+    // Fonction pour vérifier le plagiat du rapport
+    function verifierPlagiatRapport(theseId) {
+        fetch(`/verifier_plagiat_rapport/${theseId}/`)
+            .then(response => response.json())
+            .then(data => {
+                const contenu = document.getElementById("contenu-plagiat");
+                if (data.plagiat) {
+                    contenu.innerHTML = `<div style="color: #e74c3c; padding: 15px; background-color: rgba(231, 76, 60, 0.1); border-radius: 8px;"><i class="fas fa-times-circle"></i> Plagiat détecté ! Cette thèse ressemble à : <strong>${data.titre}</strong></div>`;
+                } else {
+                    contenu.innerHTML = `<div style="color: #2ecc71; padding: 15px; background-color: rgba(46, 204, 113, 0.1); border-radius: 8px;"><i class="fas fa-check-circle"></i> Aucune similarité détectée !</div>`;
+                }
+                document.getElementById("popup-plagiat").classList.add("show");
+                document.getElementById("overlay").classList.add("show");
+            })
+            .catch(error => {
+                document.getElementById("contenu-plagiat").innerHTML = `<div style="color: #e74c3c; padding: 15px; background-color: rgba(231, 76, 60, 0.1); border-radius: 8px;"><i class="fas fa-exclamation-circle"></i> Erreur lors de la vérification.</div>`;
+                document.getElementById("popup-plagiat").classList.add("show");
+                document.getElementById("overlay").classList.add("show");
+            });
+    }
+
+    // Fermer popup plagiat
+    function fermerPopupPlagiat() {
+        document.getElementById("popup-plagiat").classList.remove("show");
+        document.getElementById("overlay").classList.remove("show");
+    }
+
+    // Fermer popup d'assignation
+    function closePopup() {
+        document.getElementById("assign-popup").classList.remove("show");
+        document.getElementById("overlay").classList.remove("show");
+    }
+
+    // Gestion des formulaires d'assignation
+    document.addEventListener('DOMContentLoaded', function () {
+        // Gère l'état des lignes déjà assignées
+        document.querySelectorAll('tbody tr').forEach(function (tr) {
+            const rapporteurAssigne = tr.getAttribute('data-rapporteur-assigne');
+            if (rapporteurAssigne === 'true') {
+                const form = tr.querySelector('.assign-form');
+                if (form) {
+                    form.classList.add('assigned');
+                    const btn = form.querySelector('button[type="submit"]');
+                    const select = form.querySelector('select[name="rapporteur_id"]');
+                    if (btn) btn.disabled = true;
+                    if (select) select.disabled = true;
+                }
             }
-            
-            popup.classList.add('show');
-            overlay.classList.add('show');
-            
-            // Auto-fermeture après 3 secondes
-            setTimeout(() => {
-                popup.classList.remove('show');
-                overlay.classList.remove('show');
-            }, 3000);
-        }
-        
-        // Fermer popup d'assignation
-        function closePopup() {
-            document.getElementById('assign-popup').classList.remove('show');
-            document.getElementById('overlay').classList.remove('show');
-        }
-        
-        // Gestion des formulaires d'assignation
+        });
+
+        // Gère la soumission du formulaire d'assignation
         document.querySelectorAll('.assign-form').forEach(form => {
             form.addEventListener('submit', async function (e) {
                 e.preventDefault();
-                
+
                 const url = this.action;
                 const formData = new FormData(this);
-                
+
                 try {
                     const response = await fetch(url, {
                         method: 'POST',
@@ -639,16 +997,15 @@ body {
                         },
                         body: formData
                     });
-                    
+
                     if (response.ok) {
                         showAssignPopup("Rapporteur assigné avec succès !", true);
-                        
-                        const btn = this.querySelector('.assign-button');
-                        if (btn) {
-                            btn.classList.add('assigned');
-                            btn.innerHTML = '<i class="fas fa-check"></i> Assigné';
-                            btn.disabled = true;
-                        }
+                        const cell = this.closest('td');
+                        cell.innerHTML = `
+                            <span class="status approved">
+                                <i class="fas fa-check-circle"></i> Rapporteur déjà assigné
+                            </span>
+                        `;
                     } else {
                         showAssignPopup("Erreur lors de l'assignation.", false);
                     }
@@ -657,6 +1014,33 @@ body {
                 }
             });
         });
-    </script>
+    });
+
+    // Fonction popup stylisée pour l'assignation
+    function showAssignPopup(message, isSuccess = true) {
+        const popup = document.getElementById('assign-popup');
+        const overlay = document.getElementById('overlay');
+        const messageBox = document.getElementById('assign-message');
+
+        if (isSuccess) {
+            messageBox.innerHTML = `
+                <div style="color: #2ecc71; padding: 15px; background-color: rgba(46, 204, 113, 0.1); border-radius: 8px;">
+                    <i class="fas fa-check-circle"></i> ${message}
+                </div>`;
+        } else {
+            messageBox.innerHTML = `
+                <div style="color: #e74c3c; padding: 15px; background-color: rgba(231, 76, 60, 0.1); border-radius: 8px;">
+                    <i class="fas fa-times-circle"></i> ${message}
+                </div>`;
+        }
+
+        popup.classList.add('show');
+        overlay.classList.add('show');
+
+        setTimeout(() => {
+            closePopup();
+        }, 3000);
+    }
+</script>
 </body>
 </html>

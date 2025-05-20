@@ -1,0 +1,4 @@
+<form action="{% url 'deconnexion_professeur' %}" method="POST">
+    {% csrf_token %}
+    <button type="submit" class="nav-link logout">Déconnexion</button>
+</form>

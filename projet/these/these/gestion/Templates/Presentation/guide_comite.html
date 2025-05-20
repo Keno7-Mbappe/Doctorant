@@ -1,0 +1,1006 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide du Comité - Procédure d'Évaluation des Thèses</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+    :root {
+  --menu-bg: #3b8a5e; /* Vert foncé élégant pour le menu */
+  --menu-hover: #4da278;
+  --menu-active: #2e6e4a;
+  --menu-text: #ffffff;
+  --form-bg: #ffffff;
+  --primary: #5cbc8b; /* Vert principal */
+  --secondary: #d7f2e3; /* Vert très pastel pour fond */
+  --accent1: #e0f8e0; /* Vert pastel clair */
+  --accent2: #b5e8ca; /* Vert pastel moyen */
+  --accent3: #f0ffed; /* Vert pastel très clair */
+  --accent4: #c9e6d4; /* Vert pastel additionnel */
+  --text: #2c5b45;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+}
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Nunito', sans-serif;
+}
+
+body {
+  background-color: #f5faf8; /* Fond subtil vert pâle adouci */
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== MENU VERTICAL ===== */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 260px;
+  background: var(--menu-bg);
+  box-shadow: var(--shadow-lg);
+  z-index: 999;
+  transition: all 0.3s ease;
+}
+
+.sidebar .logo-container {
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.logo-container img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid white;
+  box-shadow: var(--shadow-md);
+}
+
+.logo-container .logo-text {
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
+  margin-left: 12px;
+  letter-spacing: 0.5px;
+}
+
+.sidebar .menu {
+  margin-top: 20px;
+  padding: 0 15px;
+}
+
+.sidebar .menu-item {
+  list-style: none;
+  margin-bottom: 12px;
+}
+
+.sidebar .menu-link {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  text-decoration: none;
+  color: var(--menu-text);
+  border-radius: var(--radius-md);
+  padding: 0 15px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar .menu-link:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.5s ease;
+}
+
+.sidebar .menu-link:hover:before {
+  left: 100%;
+}
+
+.sidebar .menu-link:hover {
+  background: var(--menu-hover);
+  transform: translateX(5px);
+}
+
+.sidebar .menu-link.active {
+  background: var(--menu-active);
+}
+
+.sidebar .menu-icon {
+  min-width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.sidebar .menu-title {
+  margin-left: 10px;
+  white-space: nowrap;
+}
+
+/* ===== CONTAINER PRINCIPAL ===== */
+.container {
+  margin-left: 260px;
+  padding: 30px;
+  min-height: 100vh;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Vagues décoratives */
+.wave-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  z-index: -1;
+}
+
+.wave-top svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 120px;
+}
+
+.wave-top .shape-fill {
+  fill: var(--secondary);
+}
+
+.wave-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  z-index: -1;
+}
+
+.wave-bottom svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 120px;
+  transform: rotateY(180deg);
+}
+
+.wave-bottom .shape-fill {
+  fill: var(--accent1);
+  opacity: 0.5;
+}
+
+/* ===== Timeline style ===== */
+.timeline {
+  margin: 40px 0;
+  position: relative;
+}
+
+.timeline-track {
+  height: 4px;
+  background: linear-gradient(to right, var(--accent2) 0%, var(--accent4) 0%);
+  margin: 0 auto;
+  position: relative;
+  border-radius: 4px;
+}
+
+.timeline-points {
+  display: flex;
+  justify-content: space-between;
+  position: absolute;
+  width: 100%;
+  top: -10px;
+}
+
+.timeline-point {
+  width: 24px;
+  height: 24px;
+  background-color: var(--accent4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  font-size: 12px;
+}
+
+.timeline-point:hover {
+  transform: scale(1.1);
+}
+
+.timeline-point.active {
+  background-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(125, 198, 165, 0.3);
+}
+
+.timeline-point.completed {
+  background-color: var(--menu-bg);
+}
+
+.timeline-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.timeline-label {
+  width: 14%;
+  text-align: center;
+}
+
+/* ===== CONTENU DES ÉTAPES ===== */
+.content-section {
+  margin-top: 40px;
+  position: relative;
+}
+
+.step-content {
+  display: none;
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 30px;
+  animation: fade-in 0.5s ease-in-out;
+  border-left: 5px solid var(--accent2);
+}
+
+.step-content.active {
+  display: block;
+}
+
+.step-header {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid var(--accent1);
+}
+
+.step-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--primary), var(--accent2));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+  color: white;
+  font-size: 24px;
+}
+
+.step-info h2 {
+  margin: 0 0 5px 0;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.step-info p {
+  margin: 0;
+  color: #6a9683;
+  font-weight: 500;
+}
+
+.step-description {
+  padding: 25px;
+  line-height: 1.7;
+}
+
+.step-description p {
+  margin-bottom: 15px;
+}
+
+.step-description ol, .step-description ul {
+  margin: 15px 0;
+  padding-left: 20px;
+}
+
+.step-description li {
+  margin-bottom: 8px;
+}
+
+.alert-info {
+  background-color: var(--accent1);
+  border-radius: var(--radius-md);
+  padding: 15px;
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+}
+
+.alert-info i {
+  color: var(--primary);
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+/* Statuts */
+.status-positive, .status-neutral, .status-negative {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.status-positive {
+  color: #5ead8c;
+}
+
+.status-neutral {
+  color: #d0b959;
+}
+
+.status-negative {
+  color: #d27976;
+}
+
+.status-positive i, .status-neutral i, .status-negative i {
+  margin-right: 5px;
+}
+
+/* Floating icons */
+.floating-icons {
+  position: fixed;
+  right: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 10;
+}
+
+.floating-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: var(--text);
+}
+
+.floating-icon:hover {
+  transform: scale(1.1);
+  box-shadow: var(--shadow-lg);
+}
+
+.floating-icon.active {
+  background: linear-gradient(135deg, var(--primary), var(--accent2));
+  color: white;
+}
+
+/* Animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animation des icônes flottantes */
+.floating-icons {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.icon-float {
+  position: absolute;
+  color: rgba(125, 198, 165, 0.2); /* Couleur verte pour les icônes */
+  font-size: 24px;
+  animation: floating linear infinite;
+}
+
+.icon-1 {
+  top: 15%;
+  left: 10%;
+  font-size: 28px;
+  animation-duration: 15s;
+}
+
+.icon-2 {
+  top: 25%;
+  right: 15%;
+  font-size: 32px;
+  animation-duration: 18s;
+}
+
+.icon-3 {
+  bottom: 20%;
+  left: 20%;
+  font-size: 36px;
+  animation-duration: 20s;
+}
+
+.icon-4 {
+  bottom: 30%;
+  right: 10%;
+  font-size: 26px;
+  animation-duration: 14s;
+}
+
+.icon-5 {
+  top: 45%;
+  left: 30%;
+  font-size: 30px;
+  animation-duration: 16s;
+}
+
+.icon-6 {
+  top: 60%;
+  right: 25%;
+  font-size: 34px;
+  animation-duration: 17s;
+}
+
+@keyframes floating {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(30px, 20px) rotate(90deg);
+  }
+  50% {
+    transform: translate(0, 40px) rotate(180deg);
+  }
+  75% {
+    transform: translate(-30px, 20px) rotate(270deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(360deg);
+  }
+}
+
+/* Personnalisation de la barre de défilement */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--menu-hover);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .sidebar {
+    width: 70px;
+  }
+  
+  .sidebar .logo-text,
+  .sidebar .menu-title {
+    display: none;
+  }
+  
+  .container {
+    margin-left: 70px;
+  }
+  
+  .floating-icons {
+    right: 20px;
+  }
+  
+  .floating-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+  
+  .step-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+  
+  .step-info h2 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+  
+  .timeline-label {
+    font-size: 10px;
+  }
+  
+  .floating-icons {
+    display: none;
+  }
+  
+  .step-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .step-icon {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .timeline-labels {
+    display: none;
+  }
+  
+  .timeline-point {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+  }
+}
+
+/* Transitions douces */
+a, button, input, select, textarea {
+  transition: all 0.3s ease;
+}
+
+/* Cartes pour les soutenances */
+.card {
+  background: var(--form-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
+  position: relative;
+}
+
+.card.visible {
+  opacity: 1;
+  transform: translateY(0);
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.card-header {
+  padding: 20px 25px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-header h1 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 0;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+}
+
+.card-header h1 i {
+  margin-right: 10px;
+}
+
+/* Modifié pour des couleurs plus douces */
+.card-header.accent-1 {
+  background: linear-gradient(135deg, #a8d8c0, #7dc6a5); /* Dégradé vert doux en cours */
+}
+
+.card-header.accent-2 {
+  background: linear-gradient(135deg, #b9d8ca, #8fbeaa); /* Dégradé vert bleuté passées */
+}
+
+.card-header.accent-3 {
+  background: linear-gradient(135deg, #b2d8cb, #94c3b2); /* Dégradé vert azur à venir */
+}
+
+.soutenance-item.highlight .soutenance-icon {
+  background: linear-gradient(45deg, #a8d8c0, #7dc6a5); /* Dégradé vert doux */
+  animation: pulse 2s infinite;
+}
+
+.soutenance-item.past .soutenance-icon {
+  background: linear-gradient(45deg, #b9d8ca, #8fbeaa); /* Dégradé vert bleuté */
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(168, 216, 192, 0.7); /* Vert pastel */
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(168, 216, 192, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(168, 216, 192, 0);
+  }
+}
+
+/* Horloge */
+.clock-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.clock {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 15px 30px;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 300px;
+  position: relative;
+  overflow: hidden;
+}
+
+.clock #date {
+  font-size: 16px;
+  color: var(--text);
+  margin-bottom: 5px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.clock #time {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.clock .progress-bar {
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent2));
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  animation: progressAnimation 3s infinite;
+}
+
+@keyframes progressAnimation {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+    </style>
+</head>
+<body>
+    <!-- Menu vertical -->
+    <nav class="sidebar">
+        <div class="logo-container">
+            <img src="{% static 'images/log.png' %}"  alt="Logo Université">
+            <div class="logo-text">Comité</div>
+        </div>
+
+        <ul class="menu">
+            <li class="menu-item">
+                <a href="{% url 'accueil_comite' %}"  class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <span class="menu-title">Accueil</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'guide_comite' %}" class="menu-link active">
+                    <div class="menu-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <span class="menu-title">Guide</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'tableau_theses_comite' %}" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-copy"></i>
+                    </div>
+                    <span class="menu-title">Copie0</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'rapport_inter' %}"  class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <span class="menu-title">Rapport intermédiaire</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'composition_jury' %}"  class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <span class="menu-title">Composition</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'profil_comite' %}" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="menu-title">Profil</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'deconnexion_comite' %}"  class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <span class="menu-title">Déconnexion</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="container">
+        <div class="wave-top">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" class="shape-fill"></path>
+                <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" class="shape-fill"></path>
+                <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" class="shape-fill"></path>
+            </svg>
+        </div>
+
+        <header>
+            <h1>Guide du Comité - Procédure d'Évaluation des Thèses</h1>
+        </header>
+        
+        <!-- Timeline -->
+        <div class="timeline">
+            <div class="timeline-track"></div>
+            <div class="timeline-points">
+                <div class="timeline-point active" data-step="1">
+                    <i class="fas fa-sign-in-alt"></i>
+                </div>
+                <div class="timeline-point" data-step="2">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="timeline-point" data-step="3">
+                    <i class="fas fa-search"></i>
+                </div>
+                <div class="timeline-point" data-step="5">
+                    <i class="fas fa-users"></i>
+                </div>
+               
+                
+            </div>
+            <div class="timeline-labels">
+                <div class="timeline-label">Connexion</div>
+                <div class="timeline-label">Copie 0</div>
+                <div class="timeline-label">Vérification plagiat</div>
+                <div class="timeline-label">Composition jury</div>
+                
+                
+            </div>
+        </div>
+        
+        <!-- Content Section -->
+        <div class="content-section">
+            <!-- Step 1 -->
+            <div class="step-content active" id="step-1">
+                <div class="step-header">
+                    <div class="step-icon">
+                        <i class="fas fa-sign-in-alt"></i>
+                    </div>
+                    <div class="step-info">
+                        <h2>Étape 1: Connexion</h2>
+                        <p>Accès à la plateforme du comité</p>
+                    </div>
+                </div>
+                <div class="step-description">
+                    <p>Bienvenue dans l'espace comité d'évaluation des thèses ! </p>
+                    <p>Si vous étes arrivée à accéder à votre espace comité :</p>
+                    <ol>
+                        <li>c'est que vous avez passée la prémiere étape , continuez</li>
+                       
+                    </ol>
+                    <div class="alert-info">
+                        <i class="fas fa-info-circle"></i> Si vous rencontrez des difficultés pour vous connecter, contactez l'administrateur.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 2 -->
+            <div class="step-content" id="step-2">
+                <div class="step-header">
+                    <div class="step-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="step-info">
+                        <h2>Étape 2: Évaluation de la Copie 0</h2>
+                        <p>Examen initial du projet de recherche</p>
+                    </div>
+                </div>
+                <div class="step-description">
+                    <p>La première phase d'évaluation consiste à examiner la copie 0 soumise par le doctorant. Ce document présente le projet de recherche initial.</p>
+                    <p>Pour accéder aux copies 0 à évaluer :</p>
+                    <ol>
+                        <li>Dans votre page copie 0, une liste de thése est déja dresser</li>
+                        <li>Filtrez par "Copie 0" pour voir uniquement les documents initiaux</li>
+                        <li>Cliquez sur le document pour le télécharger et verifier le plagiat</li>
+                    </ol>
+                    
+                    <p>Pour soumettre votre évaluation :</p>
+                    <ol>
+                        <li>Choisissez l'une des décisions suivantes :
+                            <ul>
+                                <li><span class="status-positive"><i class="fas fa-check-circle"></i> Approuvé</span></li>
+                                
+                                <li><span class="status-negative"><i class="fas fa-times-circle"></i> réjetté</span></li>
+                            </ul>
+                        </li>
+            
+                    </ol>
+                    <div class="alert-info">
+                        <i class="fas fa-lightbulb"></i> Conseil : Soyez précis dans vos commentaires pour permettre au doctorant d'améliorer son projet de recherche.
+                    </div>
+                </div>
+            </div>
+            
+           
+            <div class="step-content" id="step-3">
+                <div class="step-header">
+                    <div class="step-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="step-info">
+                        <h2>Étape 3: Verification de plagiat</h2>
+                        <p>Analyse des avancées de la recherche</p>
+                    </div>
+                </div>
+                <div class="step-description">
+                    <p>Cette étape permet d’analyser le rapport intermédiaire afin de détecter d’éventuelles similarités avec d’autres documents académiques enregistrés dans notre base de données. Elle vise à garantir l’originalité du travail de recherche du doctorant et à prévenir tout risque de plagiat. </p>
+                </div>
+            </div>
+            
+            <div class="step-content" id="step-5">
+                <div class="step-header">
+                    <div class="step-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="step-info">
+                        <h2>Étape 4: Composition du Jury</h2>
+                        <p>Constitution du jury de soutenance</p>
+                    </div>
+                </div>
+                <div class="step-description">
+                    <p>À cette étape, les membres du jury de soutenance sont désignés. Le jury est composé d’enseignants-chercheurs qualifiés chargés d’évaluer la qualité scientifique du travail présenté par le doctorant lors de la soutenance finale.</p>
+                </div>
+            </div>
+            
+            
+            
+            
+            
+            
+        
+        <div class="wave-bottom">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" class="shape-fill"></path>
+                <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" class="shape-fill"></path>
+                <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" class="shape-fill"></path>
+            </svg>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const timelinePoints = document.querySelectorAll('.timeline-point');
+            const stepContents = document.querySelectorAll('.step-content');
+            const floatingIcons = document.querySelectorAll('.floating-icon');
+            
+            // Function to show step content
+            function showStep(stepNumber) {
+                // Hide all step contents
+                stepContents.forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Show selected step content
+                document.getElementById('step-' + stepNumber).classList.add('active');
+                
+                // Update timeline points and progress
+                timelinePoints.forEach(point => {
+                    const pointStep = parseInt(point.getAttribute('data-step'));
+                    point.classList.remove('active', 'completed');
+                    
+                    if (pointStep < stepNumber) {
+                        point.classList.add('completed');
+                    } else if (pointStep == stepNumber) {
+                        point.classList.add('active');
+                    }
+                });
+                
+                // Update timeline track progress
+                const progress = ((stepNumber - 1) / (timelinePoints.length - 1)) * 100;
+                document.querySelector('.timeline-track').style.background = 
+                    `linear-gradient(to right, var(--accent2) ${progress}%, var(--accent4) ${progress}%)`;
+                
+                // Update floating icons
+                floatingIcons.forEach(icon => {
+                    icon.classList.remove('active');
+                    if (icon.getAttribute('data-step') === stepNumber) {
+                        icon.classList.add('active');
+                    }
+                });
+            }
+            
+            // Add click event to timeline points
+            timelinePoints.forEach(point => {
+                point.addEventListener('click', function() {
+                    const stepNumber = this.getAttribute('data-step');
+                    showStep(stepNumber);
+                });
+            });
+            
+            // Add click event to floating icons
+            floatingIcons.forEach(icon => {
+                icon.addEventListener('click', function() {
+                    const stepNumber = this.getAttribute('data-step');
+                    showStep(stepNumber);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

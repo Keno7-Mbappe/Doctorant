@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copie 0</title>
+    <link rel="stylesheet" href="{% static 'css/st.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="logo-container">
+        <img src="{% static 'images/log.png' %}" alt="Logo">
+        <div class="logo-text">Doctorant</div>
+    </div>
+    <ul class="menu">
+        <li class="menu-item"><a href="{% url 'accueil_etudiant' %}" class="menu-link"><div class="menu-icon"><i class="fas fa-home"></i></div><span class="menu-title">Accueil</span></a></li>
+        <li class="menu-item"><a href="{% url 'rapport_intermediaire' %}" class="menu-link"><div class="menu-icon"><i class="fas fa-file-alt"></i></div><span class="menu-title">Rapport intermédiaire</span></a></li>
+        <li class="menu-item"><a href="{% url 'rapport_final' %}" class="menu-link active"><div class="menu-icon"><i class="fas fa-file-contract"></i></div><span class="menu-title">Rapport final</span></a></li>
+        <li class="menu-item"><a href="{% url 'notifications' %}" class="menu-link"><div class="menu-icon"><i class="fas fa-bell"></i></div><span class="menu-title">Notifications</span></a></li>
+        <li class="menu-item"><a href="{% url 'profil_etudiant' %}" class="menu-link"><div class="menu-icon"><i class="fas fa-user"></i></div><span class="menu-title">Profil</span></a></li>
+    </ul>
+</div>
+
+<!-- Contenu -->
+<div class="container">
+    <div class="profile-header">
+        <h1>Bienvenue, {{ user.username }}</h1>
+    </div>
+
+    <!-- Modale de message Django -->
+    {% if messages %}
+        <div id="messageModal" class="modal">
+            <div class="modal-content">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        <span class="icon">
+                            {% if message.tags == 'success' %}
+                                <img src="{% static 'images/success-icon.png' %}" alt="Success" class="icon-img">
+                            {% else %}
+                                <img src="{% static 'images/error-icon.png' %}" alt="Error" class="icon-img">
+                            {% endif %}
+                        </span>
+                        <span class="message-text">{{ message }}</span>
+                    </div>
+                {% endfor %}
+                <button id="closeModal" class="close-btn">Fermer</button>
+            </div>
+        </div>
+    {% endif %}
+
+    <!-- Formulaire de soumission -->
+    <div class="these">
+        <h2>Soumettre votre thèse</h2>
+        <form id="copieZeroForm" method="POST" action="{% url 'copie_zero' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <label for="titre">Titre :</label>
+            <input type="text" id="titre" name="titre" required>
+            <div id="titre-message" style="margin-top: 5px; display: none;"></div>
+
+            <label for="domaine">Domaine :</label>
+            <select id="domaine" name="domaine">
+                <option value="medecine">Médecine</option>
+                <option value="cardiologie">Cardiologie</option>
+                <option value="pédiatrie">Pédiatrie</option>
+                <option value="dermatologie">Dermatologie</option>
+                <option value="academique">Académique</option>
+            </select>
+
+            <label for="description">Description :</label>
+            <textarea id="description" name="description" rows="2" maxlength="50"></textarea>
+
+            <label for="motivation">Motivation :</label>
+            <textarea id="motivation" name="motivation" rows="2" maxlength="50"></textarea>
+
+            <label for="encadreur">Encadreur :</label>
+            <select id="encadreur" name="encadreur">
+                <option value="dr_ali">Dr Ahmed Yacin</option>
+                <option value="houssein">Dr Houssein</option>
+                <option value="liban">Dr Liban</option>
+                <option value="souleiman">Dr Souleiman</option>
+            </select>
+
+            <label for="fichier">Joindre un fichier :</label>
+            <input type="file" id="fichier" name="fichier">
+
+            {% if these_deja_soumise %}
+                <p style="color:red;">Vous avez déjà soumis votre thèse. Vous ne pouvez plus soumettre une autre.</p>
+                <button type="submit" id="submit-btn" disabled style="background-color: darkblue; cursor: not-allowed;">Soumettre</button>
+            {% else %}
+                <button type="submit" id="submit-btn">Soumettre</button>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+<!-- JS : Confirmation, AJAX titre, Modale -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('copieZeroForm');
+    const submitBtn = document.getElementById('submit-btn');
+    const titreInput = document.getElementById('titre');
+    const titreMessage = document.getElementById('titre-message');
+
+    // Confirmation de soumission
+    form.addEventListener('submit', function (event) {
+        const confirmation = confirm("Êtes-vous sûr de vouloir soumettre votre thèse ?");
+        if (!confirmation) {
+            event.preventDefault();
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Soumission en cours...";
+        }
+    });
+
+    // AJAX vérification du titre
+    titreInput.addEventListener('input', function () {
+        const titre = this.value.trim();
+        if (titre.length > 25) {
+            fetch("{% url 'verifier_titre' %}?titre=" + encodeURIComponent(titre))
+                .then(response => response.json())
+                .then(data => {
+                    if (data.existe) {
+                        titreMessage.innerHTML = "<span style='color:red;'>❌ Ce titre existe déjà.</span>";
+                    } else {
+                        titreMessage.innerHTML = "<span style='color:green;'>✅ Ce titre est disponible.</span>";
+                    }
+                    titreMessage.style.display = 'block';
+                });
+        } else {
+            titreMessage.innerHTML = "";
+            titreMessage.style.display = 'none';
+        }
+    });
+
+    // Gestion de la modale Django
+    const modal = document.getElementById('messageModal');
+    if (modal) {
+        modal.style.display = 'block';
+        document.getElementById('closeModal').onclick = () => modal.style.display = 'none';
+        window.onclick = function (e) {
+            if (e.target === modal) modal.style.display = 'none';
+        };
+    }
+});
+</script>
+
+</body>
+</html>

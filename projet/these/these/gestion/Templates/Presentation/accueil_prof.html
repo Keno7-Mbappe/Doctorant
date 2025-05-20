@@ -1,0 +1,1011 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plateforme de Soutenances</title>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --menu-bg: #5D3E8A; /* Violet professionnel pour le menu */
+  --menu-hover: #7A51B5;
+  --menu-active: #4C3272;
+  --menu-text: #ffffff;
+  --form-bg: #ffffff;
+  --primary: #6D47AA; /* Violet principal */
+  --secondary: #E4D7F6; /* Violet très pastel pour fond */
+  --accent1: #F0E6FF; /* Violet pastel clair */
+  --accent2: #D3BEFB; /* Violet pastel moyen */
+  --accent3: #F8F4FF; /* Violet pastel très clair */
+  --accent4: #DFD2F3; /* Violet pastel additionnel */
+  --text: #3A2954;
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Nunito', sans-serif;
+}
+
+body {
+  background-color: #ffffff; /* Fond blanc */
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== MENU VERTICAL ===== */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 260px;
+  background: var(--menu-bg);
+  box-shadow: var(--shadow-lg);
+  z-index: 999;
+  transition: all 0.3s ease;
+}
+
+.sidebar .logo-container {
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.logo-container img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid white;
+  box-shadow: var(--shadow-md);
+}
+
+.logo-container .logo-text {
+  color: white;
+  font-size: 20px;
+  font-weight: 700;
+  margin-left: 12px;
+  letter-spacing: 0.5px;
+}
+
+.sidebar .menu {
+  margin-top: 20px;
+  padding: 0 15px;
+}
+
+.sidebar .menu-item {
+  list-style: none;
+  margin-bottom: 12px;
+}
+
+.sidebar .menu-link {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  text-decoration: none;
+  color: var(--menu-text);
+  border-radius: var(--radius-md);
+  padding: 0 15px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar .menu-link:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.5s ease;
+}
+
+.sidebar .menu-link:hover:before {
+  left: 100%;
+}
+
+.sidebar .menu-link:hover {
+  background: var(--menu-hover);
+  transform: translateX(5px);
+}
+
+.sidebar .menu-link.active {
+  background: var(--menu-active);
+}
+
+.sidebar .menu-icon {
+  min-width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.sidebar .menu-title {
+  margin-left: 10px;
+  white-space: nowrap;
+}
+
+/* ===== CONTAINER PRINCIPAL ===== */
+.container {
+  margin-left: 260px;
+  padding: 30px;
+  min-height: 100vh;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Vagues décoratives */
+.wave-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  z-index: -1;
+}
+
+.wave-top svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 120px;
+}
+
+.wave-top .shape-fill {
+  fill: #E8D5F9; /* Violet très clair pour les vagues */
+}
+
+.wave-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  z-index: -1;
+}
+
+.wave-bottom svg {
+  position: relative;
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 120px;
+  transform: rotateY(180deg);
+}
+
+.wave-bottom .shape-fill {
+  fill: #F3E9FF; /* Autre violet très clair pour les vagues */
+  opacity: 0.5;
+}
+
+/* ===== ANIMATION DES ICÔNES FLOTTANTES ===== */
+.floating-icons {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.icon-float {
+  position: absolute;
+  color: rgba(109, 71, 170, 0.2); /* Couleur violette pour les icônes */
+  font-size: 24px;
+  animation: floating linear infinite;
+}
+
+.icon-1 {
+  top: 15%;
+  left: 10%;
+  font-size: 28px;
+  animation-duration: 15s;
+}
+
+.icon-2 {
+  top: 25%;
+  right: 15%;
+  font-size: 32px;
+  animation-duration: 18s;
+}
+
+.icon-3 {
+  bottom: 20%;
+  left: 20%;
+  font-size: 36px;
+  animation-duration: 20s;
+}
+
+.icon-4 {
+  bottom: 30%;
+  right: 10%;
+  font-size: 26px;
+  animation-duration: 14s;
+}
+
+.icon-5 {
+  top: 45%;
+  left: 30%;
+  font-size: 30px;
+  animation-duration: 16s;
+}
+
+.icon-6 {
+  top: 60%;
+  right: 25%;
+  font-size: 34px;
+  animation-duration: 17s;
+}
+
+@keyframes floating {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(30px, 20px) rotate(90deg);
+  }
+  50% {
+    transform: translate(0, 40px) rotate(180deg);
+  }
+  75% {
+    transform: translate(-30px, 20px) rotate(270deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(360deg);
+  }
+}
+
+/* ===== HORLOGE ===== */
+.clock-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.clock {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 15px 30px;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 300px;
+  position: relative;
+  overflow: hidden;
+}
+
+.clock #date {
+  font-size: 16px;
+  color: var(--text);
+  margin-bottom: 5px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.clock #time {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.clock .progress-bar {
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent2));
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  animation: progressAnimation 3s infinite;
+}
+
+@keyframes progressAnimation {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+/* ===== CONTENU PRINCIPAL ===== */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* Cartes pour les soutenances */
+.card {
+  background: var(--form-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
+  position: relative;
+}
+
+.card.visible {
+  opacity: 1;
+  transform: translateY(0);
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.card-header {
+  padding: 20px 25px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-header h1 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 0;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+}
+
+.card-header h1 i {
+  margin-right: 10px;
+}
+
+.card-header:after {
+  content: "";
+  position: absolute;
+  bottom: -30px;
+  right: -30px;
+  width: 150px;
+  height: 150px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+.card-header:before {
+  content: "";
+  position: absolute;
+  top: -30px;
+  left: -30px;
+  width: 100px;
+  height: 100px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.card-header .progress-bar {
+  height: 4px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  animation: progressAnimation 3s infinite;
+}
+
+/* Nouveaux styles pour les couleurs pastel */
+.card-header.accent-1 {
+  background: linear-gradient(135deg, #FFB2EF, #FF80E5); /* Rose pastel pour en cours */
+}
+
+.card-header.accent-2 {
+  background: linear-gradient(135deg, #FFB2B2, #FF8080); /* Rouge pastel pour passées */
+}
+
+.card-header.accent-3 {
+  background: linear-gradient(135deg, #FFD2B2, #FFAA80); /* Orange pastel pour à venir */
+}
+
+.soutenance-item.highlight .soutenance-icon {
+  background: linear-gradient(45deg, #FFB2EF, #FF80E5); /* Rose pastel pour en cours */
+  animation: pulse 2s infinite;
+}
+
+.soutenance-item.past .soutenance-icon {
+  background: linear-gradient(45deg, #FFB2B2, #FF8080); /* Rouge pastel pour passées */
+}
+
+.soutenance-item.highlight .bubble-arrow {
+  border-left-color: #FF80E5; /* Rose pastel */
+}
+
+.soutenance-item.past .bubble-arrow {
+  border-left-color: #FF8080; /* Rouge pastel */
+}
+
+.soutenance-item.highlight .soutenance-date i,
+.soutenance-item.highlight .soutenance-location i {
+  color: #FF80E5; /* Rose pastel */
+}
+
+.soutenance-item.past .soutenance-date i,
+.soutenance-item.past .soutenance-location i {
+  color: #FF8080; /* Rouge pastel */
+}
+
+.soutenance-item.highlight .soutenance-badge {
+  background: linear-gradient(45deg, #FFB2EF, #FF80E5); /* Rose pastel */
+  animation: pulse-light 2s infinite;
+}
+
+.soutenance-item.past .soutenance-badge {
+  background: linear-gradient(45deg, #FFB2B2, #FF8080); /* Rouge pastel */
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 178, 239, 0.7); /* Rose pastel */
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 178, 239, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 178, 239, 0);
+  }
+}
+
+@keyframes pulse-light {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 178, 239, 0.4); /* Rose pastel */
+  }
+  70% {
+    box-shadow: 0 0 0 5px rgba(255, 178, 239, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 178, 239, 0);
+  }
+}
+
+.bubble-arrow {
+  position: absolute;
+  left: 50px;
+  top: 20px;
+  width: 0;
+  height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 5px solid var(--primary);
+}
+
+.soutenance-item.highlight .bubble-arrow {
+  border-left-color: #FF80E5;
+}
+
+.soutenance-item.past .bubble-arrow {
+  border-left-color: #FF8080;
+}
+
+.soutenance-content {
+  flex: 1;
+  background: #ffffff; /* Fond blanc */
+  border-radius: var(--radius-md);
+  padding: 15px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.soutenance-content:hover {
+  background: white;
+  box-shadow: var(--shadow-md);
+}
+
+.soutenance-header {
+  margin-bottom: 10px;
+}
+
+.soutenance-header h3 {
+  font-size: 18px;
+  margin-bottom: 5px;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.soutenance-doctorant {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.soutenance-doctorant i {
+  margin-right: 5px;
+  color: var(--primary);
+}
+
+.soutenance-date, .soutenance-location {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.soutenance-date i, .soutenance-location i {
+  margin-right: 5px;
+  color: var(--primary);
+  width: 16px;
+  text-align: center;
+}
+
+.soutenance-item.highlight .soutenance-date i,
+.soutenance-item.highlight .soutenance-location i {
+  color: #FF80E5;
+}
+
+.soutenance-item.past .soutenance-date i,
+.soutenance-item.past .soutenance-location i {
+  color: #FF8080;
+}
+
+.soutenance-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--primary);
+  color: white;
+}
+
+.soutenance-item.highlight .soutenance-badge {
+  background: linear-gradient(45deg, #FFB2EF, #FF80E5);
+  animation: pulse-light 2s infinite;
+}
+
+.soutenance-item.past .soutenance-badge {
+  background: linear-gradient(45deg, #FFB2B2, #FF8080);
+}
+
+@keyframes pulse-light {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 178, 239, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 5px rgba(255, 178, 239, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 178, 239, 0);
+  }
+}
+
+.empty-list {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: var(--radius-md);
+  color: #5D3E8A;
+}
+
+.empty-list i {
+  margin-right: 10px;
+  font-size: 20px;
+  color: var(--primary);
+}
+
+/* Personnalisation de la barre de défilement */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--menu-hover);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .sidebar {
+    width: 70px;
+  }
+  
+  .sidebar .logo-text,
+  .sidebar .menu-title {
+    display: none;
+  }
+  
+  .container {
+    margin-left: 70px;
+  }
+  
+  .clock {
+    min-width: auto;
+    width: 100%;
+  }
+  
+  .card-header h1 {
+    font-size: 18px;
+  }
+  
+  .soutenance-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+  
+  .bubble-arrow {
+    left: 40px;
+    top: 15px;
+  }
+  
+  .soutenance-header h3 {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+  
+  .card-body {
+    padding: 15px;
+  }
+  
+  .soutenance-content {
+    padding: 10px;
+  }
+  
+  .soutenance-badge {
+    position: static;
+    display: inline-block;
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .soutenance-item {
+    flex-direction: column;
+  }
+  
+  .soutenance-bubble {
+    margin-right: 0;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .bubble-arrow {
+    display: none;
+  }
+}
+/* Transitions douces */
+a, button, input, select, textarea {
+  transition: all 0.3s ease;
+}
+</style>
+    
+</head>
+<body>
+    <!-- Menu vertical -->
+    <nav class="sidebar">
+        <div class="logo-container">
+            <img src="{% static 'images/log.png' %}"  alt="Logo Université">
+            <div class="logo-text">Proffesseur</div>
+        </div>
+
+        <ul class="menu">
+            <li class="menu-item">
+                <a href="{% url 'accueil_prof' %}" class="menu-link active">
+                    <div class="menu-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <span class="menu-title">Accueil</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'guide_prof' %}" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <span class="menu-title">Guide</span>
+                </a>
+            </li>
+            
+            <li class="menu-item">
+                <a href="{% url 'page_rapporteur' %}" class="menu-link">
+                    <div class="menu-icon">
+                       <i class="fas fa-pen"></i> 
+                    </div>
+                    <span class="menu-title">Rapporteur</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'profil_prof' %}" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <span class="menu-title">Profil</span>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="{% url 'deconnexion_professeur' %}" class="menu-link">
+                    <div class="menu-icon">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </div>
+                    <span class="menu-title">Déconnexion</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Contenu principal -->
+    <div class="container">
+        <!-- Vagues décoratives -->
+        <div class="wave-top">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+            </svg>
+        </div>
+        
+        <div class="wave-bottom">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+            </svg>
+        </div>
+        
+        <!-- Icônes flottantes -->
+        <div class="floating-icons">
+            <i class="fas fa-graduation-cap icon-float icon-1"></i>
+            <i class="fas fa-book icon-float icon-2"></i>
+            <i class="fas fa-microscope icon-float icon-3"></i>
+            <i class="fas fa-atom icon-float icon-4"></i>
+            <i class="fas fa-award icon-float icon-5"></i>
+            <i class="fas fa-university icon-float icon-6"></i>
+        </div>
+        <div class="floating-icons">
+            <i class="fas fa-graduation-cap icon-float icon-1"></i>
+            <i class="fas fa-book icon-float icon-2"></i>
+            <i class="fas fa-microscope icon-float icon-3"></i>
+            <i class="fas fa-atom icon-float icon-4"></i>
+            <i class="fas fa-award icon-float icon-5"></i>
+            <i class="fas fa-university icon-float icon-6"></i>
+        </div>
+        <div class="floating-icons">
+            <i class="fas fa-graduation-cap icon-float icon-1"></i>
+            <i class="fas fa-book icon-float icon-2"></i>
+            <i class="fas fa-microscope icon-float icon-3"></i>
+            <i class="fas fa-atom icon-float icon-4"></i>
+            <i class="fas fa-award icon-float icon-5"></i>
+            <i class="fas fa-university icon-float icon-6"></i>
+        </div>
+        
+        <!-- Horloge -->
+        <div class="clock-container">
+            <div class="clock">
+                <div id="date"></div>
+                <div id="time"></div>
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <!-- Soutenances en cours -->
+            <div class="card visible">
+                <div class="card-header accent-1">
+                    <h1><i class="fas fa-calendar-day"></i> Soutenances en cours</h1>
+                    <div class="progress-bar"></div>
+                </div>
+                <div class="card-body">
+                    <ul class="soutenances-list">
+                        {% for soutenance in en_cours %}
+                        <li class="soutenance-item highlight">
+                            <div class="soutenance-bubble">
+                                <div class="soutenance-icon">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                </div>
+                                <div class="bubble-arrow"></div>
+                            </div>
+                            <div class="soutenance-content">
+                                <div class="soutenance-header">
+                                    <h3>{{ soutenance.these.titre }}</h3>
+                                    <div class="soutenance-doctorant">
+                                        <i class="fas fa-user-graduate"></i>
+                                        <span>{{ soutenance.these.doctorant.nom }} {{ soutenance.these.doctorant.prenom }}</span>
+                                    </div>
+                                </div>
+                                <div class="soutenance-date">
+                                    <i class="fas fa-clock"></i>
+                                    <span>Aujourd'hui - {{ soutenance.heure_debut|time:"H:i" }} à {{ soutenance.heure_fin|time:"H:i" }}</span>
+                                </div>
+                                <div class="soutenance-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>{{ soutenance.lieu }}</span>
+                                </div>
+                                <div class="soutenance-badge">En cours</div>
+                            </div>
+                        </li>
+                        {% empty %}
+                        <li class="empty-list">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Aucune soutenance aujourd'hui.</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Soutenances à venir -->
+            <div class="card visible">
+                <div class="card-header accent-2">
+                    <h1><i class="fas fa-calendar-alt"></i> Soutenances à venir</h1>
+                    <div class="progress-bar"></div>
+                </div>
+                <div class="card-body">
+                    <ul class="soutenances-list">
+                        {% for soutenance in a_venir %}
+                        <li class="soutenance-item">
+                            <div class="soutenance-bubble">
+                                <div class="soutenance-icon">
+                                    <i class="fas fa-hourglass-half"></i>
+                                </div>
+                                <div class="bubble-arrow"></div>
+                            </div>
+                            <div class="soutenance-content">
+                                <div class="soutenance-header">
+                                    <h3>{{ soutenance.these.titre }}</h3>
+                                    <div class="soutenance-doctorant">
+                                        <i class="fas fa-user-graduate"></i>
+                                        <span>{{ soutenance.these.doctorant.nom }} {{ soutenance.these.doctorant.prenom }}</span>
+                                    </div>
+                                </div>
+                                <div class="soutenance-date">
+                                    <i class="fas fa-calendar"></i>
+                                    <span>{{ soutenance.date_soutenance }}</span>
+                                </div>
+                                <div class="soutenance-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>{{ soutenance.lieu }}</span>
+                                </div>
+                                <div class="soutenance-badge">À venir</div>
+                            </div>
+                        </li>
+                        {% empty %}
+                        <li class="empty-list">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Aucune soutenance à venir.</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Soutenances passées -->
+            <div class="card visible">
+                <div class="card-header accent-3">
+                    <h1><i class="fas fa-history"></i> Soutenances passées</h1>
+                    <div class="progress-bar"></div>
+                </div>
+                <div class="card-body">
+                    <ul class="soutenances-list">
+                        {% for soutenance in passees %}
+                        <li class="soutenance-item past">
+                            <div class="soutenance-bubble">
+                                <div class="soutenance-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="bubble-arrow"></div>
+                            </div>
+                            <div class="soutenance-content">
+                                <div class="soutenance-header">
+                                    <h3>{{ soutenance.these.titre }}</h3>
+                                    <div class="soutenance-doctorant">
+                                        <i class="fas fa-user-graduate"></i>
+                                        <span>{{ soutenance.these.doctorant.nom }} {{ soutenance.these.doctorant.prenom }}</span>
+                                    </div>
+                                </div>
+                                <div class="soutenance-date">
+                                    <i class="fas fa-calendar-check"></i>
+                                    <span>{{ soutenance.date_soutenance }}</span>
+                                </div>
+                                <div class="soutenance-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>{{ soutenance.lieu }}</span>
+                                </div>
+                                <div class="soutenance-badge">Terminée</div>
+                            </div>
+                        </li>
+                        {% empty %}
+                        <li class="empty-list">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Aucune soutenance passée.</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Script pour l'horloge
+        function updateClock() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('date').textContent = now.toLocaleDateString('fr-FR', options);
+            
+            let hours = now.getHours();
+            let minutes = now.getMinutes();
+            let seconds = now.getSeconds();
+            
+            hours = hours < 10 ? '0' + hours : hours;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            
+            document.getElementById('time').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+        
+        // Mise à jour de l'horloge toutes les secondes
+        setInterval(updateClock, 1000);
+        updateClock(); // Première mise à jour immédiate
+        
+        // Animation pour l'apparition des cartes
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            
+            // Fonction pour vérifier si un élément est visible dans la fenêtre
+            function isElementInViewport(el) {
+                const rect = el.getBoundingClientRect();
+                return (
+                    rect.top >= 0 &&
+                    rect.left >= 0 &&
+                    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                    rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+                );
+            }
+            
+            // Fonction pour ajouter la classe 'visible' aux cartes visibles
+            function handleScroll() {
+                cards.forEach(card => {
+                    if (isElementInViewport(card)) {
+                        card.classList.add('visible');
+                    }
+                });
+            }
+            
+            // Déclenchement au scroll et au chargement initial
+            window.addEventListener('scroll', handleScroll);
+            handleScroll();
+        });
+    </script>
+</body>
+</html>
